@@ -15,6 +15,7 @@ declare class KamiInfiniteList extends KamiComponent {
     setProperties(): void;
     initEventListener(): void;
     connectedCallback(): void;
+    generateRequest(): Request;
     /**
      * This methode get the data from the datasource.
      * After it will create all the dom and append this into the infinite list.

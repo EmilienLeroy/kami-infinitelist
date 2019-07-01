@@ -4,8 +4,6 @@ import '@webcomponents/webcomponentsjs/webcomponents-bundle';
 import 'web-animations-js';
 
 import KamiComponent from 'kami-component';
-import axios from 'axios';
-
 
 class KamiInfiniteList extends KamiComponent
 {
@@ -59,21 +57,29 @@ class KamiInfiniteList extends KamiComponent
 
     setProperties()
     {
-        this.props = this.observe({
-            datasource: this.getAttribute('datasource'),
-            delegate:  this.getAttribute('delegate'),
-            width: this.getAttribute('width') || '100%',
-            height:  this.getAttribute('height') || '100vh',
-            useSearch: this.toBoolean(this.getAttribute('useSearch')) || false,
-            searchQuery: this.getAttribute('searchQuery') || 'search',
-            sortQuery: this.getAttribute('sortQuery') || 'sort',
-            page:  this.getAttribute('page') || '1',
-            query: {
-                page : this.getAttribute('page') || '1',
-                limit:  this.getAttribute('limit') || '10'
-            },
+        let datasource: string | null = this.getAttribute('datasource');
+        let delegate: string | null = this.getAttribute('delegate');
 
-        })
+        if(datasource && delegate){
+            this.props = this.observe({
+                datasource: new URL(datasource),
+                delegate:  delegate,
+                width: this.getAttribute('width') || '100%',
+                height:  this.getAttribute('height') || '100vh',
+                useSearch: this.toBoolean(this.getAttribute('useSearch')) || false,
+                searchQuery: this.getAttribute('searchQuery') || 'search',
+                sortQuery: this.getAttribute('sortQuery') || 'sort',
+                pageQuery: this.getAttribute('pageQuery') || 'page',
+                limitQuery: this.getAttribute('limitQuery') || 'limit',
+                page:  this.getAttribute('page') || '1',
+                query: {},
+            })
+        }else{
+            throw new Error('You need a datasource and delegate !');
+        }
+        
+        this.props.query[this.props.pageQuery] = this.getAttribute('page') || '1';
+        this.props.query[this.props.limitQuery] = this.getAttribute('limit') || '10';
   
         if(this.props.useSearch){
             //update the query with url query
@@ -104,8 +110,10 @@ class KamiInfiniteList extends KamiComponent
         //init scroll listener
         this.container.addEventListener('scroll',()=>{
             if( Math.round(this.container.scrollTop + 20) > (this.container.scrollHeight - this.container.offsetHeight)){
+
                 if(!this.inLoad && !this.end){
                     
+                    console.log('load')
                     //increment the page
                     this.props.query.page ++;
                     
@@ -153,6 +161,19 @@ class KamiInfiniteList extends KamiComponent
         
     }
 
+    public generateRequest(): Request
+    {
+        let url: URL = new URL(this.props.datasource);
+        
+        for(let key in this.props.query){
+            url.searchParams.append(key, this.props.query[key])
+        }
+
+        let requestInfo : RequestInfo = url.toString()
+        let request = new Request(requestInfo);
+        
+        return request
+    }
     /**
      * This methode get the data from the datasource.
      * After it will create all the dom and append this into the infinite list.
@@ -160,59 +181,61 @@ class KamiInfiniteList extends KamiComponent
      */
     getData()
     {
+        
+        let request : Request = this.generateRequest();
+       
         //set the inLoad state a true
         this.inLoad = true;
 
         //get the data from the endpoint
-        axios.get(this.props.datasource, { params: this.props.query }).then(res => {
-            
-            //check if data are array else throw an error
-            if(Array.isArray(res.data)){
-                
-                //if the data length are not the same as the limit property
-                //the end state is set at true and stop the get data methode
-                if(res.data.length != this.props.query.limit){
-                    this.end = true;
-                }
-
-                //for each data it will convert and create a component
-                //all component are set into the components property
-                //and the create dom are append to the main dom
-                for(this.data in res.data){
-                    let data = res.data[this.data];
-
-                    if(data instanceof Object && !Array.isArray(data)){
-                        let component = this.component.cloneNode();
-    
-                        this.componentAttributes.forEach(atts => {
-                            let dataProvide = this.convertData(data,component.getAttribute(atts.toString()));
-
-                            atts != 'slots' ?
-                                component.setAttribute(atts,dataProvide) :
-                                component.innerHTML = dataProvide;
-                        });
-        
-                        this.components.push(component);
-                        this.addComponent(component);
-                        
-                    }else{
-                        throw new Error('Data should be an array of object !');
+        fetch(request)
+            .then(response => response.json())
+            .then(json => {
+                //check if data are array else throw an error
+                if(Array.isArray(json)){
+                    
+                    //if the data length are not the same as the limit property
+                    //the end state is set at true and stop the get data methode
+                    if(json.length != this.props.query[this.props.limitQuery]){
+                        this.end = true;
                     }
-    
-                }
-            }else{
-                throw new Error('Data should be an array of object !');
-            }
 
-            //at the end the inload state is set as false 
-            this.inLoad = false;
+                    //for each data it will convert and create a component
+                    //all component are set into the components property
+                    //and the create dom are append to the main dom
+                    for(this.data in json){
+                        let data = json[this.data];
 
-        }).catch((error) => {
-            //error handling
-            console.log(error.message)
+                        if(data instanceof Object && !Array.isArray(data)){
+                            let component = this.component.cloneNode();
         
-        });
+                            this.componentAttributes.forEach(atts => {
+                                let dataProvide = this.convertData(data,component.getAttribute(atts.toString()));
 
+                                atts != 'slots' ?
+                                    component.setAttribute(atts,dataProvide) :
+                                    component.innerHTML = dataProvide;
+                            });
+            
+                            this.components.push(component);
+                            this.addComponent(component);
+                            
+                        }else{
+                            throw new Error('Data should be an array of object !');
+                        }
+        
+                    }
+                }else{
+                    throw new Error('Data should be an array of object !');
+                }
+
+                //at the end the inload state is set as false 
+                this.inLoad = false;
+            }).catch((error) => {
+                //error handling
+                console.log(error.message);
+            })
+     
         return this;
     }
 
@@ -315,8 +338,6 @@ class KamiInfiniteList extends KamiComponent
     renderStyle()
     {
         return `
-            @import '/css/icon.css';
-
             .infiniteliste{
                 width: ${this.props.width};
                 height : ${this.props.height};

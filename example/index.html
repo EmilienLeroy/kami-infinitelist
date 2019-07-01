@@ -6,9 +6,27 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
+<style>
+
+*{
+    padding: 0;
+    margin: 0;
+}
+
+</style>
 <body>
     
-    <kami-infinitelist></kami-infinitelist>
+    <kami-infinitelist
+        datasource="https://jsonplaceholder.typicode.com/posts/"
+        delegate="div"
+        limitQuery="_limit"
+        pageQuery="_start"
+        limit='22'
+    >
+        <div
+            slots="body"
+        ></div>
+    </kami-infinitelist>
 
 
     <script src="../dist/KamiInfiniteList.umd.js"></script>
