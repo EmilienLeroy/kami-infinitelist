@@ -3,7 +3,7 @@
 An infinite scroller. Just add a datasource provider and a delegate web components and it's work !
 
 <p align="center">
-  <img  src="">
+  <img  src="https://emilienleroy.fr/assets/flex.gif">
 </p>
 
 ## Installation
@@ -60,8 +60,12 @@ For use the infinite list you need two prerequire.
 
  The delegate should be a web component. The property of this component will be map to the data by the infinte list component.
 
+ ### Simple list
+
+ This the source code to create a simple list with this component. This is the final result.
+
 <p align="center">
-  <img  src="">
+  <img  src="https://emilienleroy.fr/assets/simple.gif">
 </p>
 
 `index.html`
