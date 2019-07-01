@@ -64,7 +64,8 @@ class KamiInfiniteList extends KamiComponent
             'searchQuery',
             'sortQuery',
             'page',
-            'limit'
+            'limit',
+            'flex'
         ];
     }
 
@@ -86,6 +87,7 @@ class KamiInfiniteList extends KamiComponent
                 pageQuery: this.getAttribute('pageQuery') || 'page',
                 limitQuery: this.getAttribute('limitQuery') || 'limit',
                 page:  this.getAttribute('page') || '1',
+                flex: this.toBoolean(this.getAttribute('flex')) || false,
                 query: {},
             })
         }else{
@@ -111,7 +113,7 @@ class KamiInfiniteList extends KamiComponent
     public connectedCallback() : void
     {
         //init dom.
-        this.container = this.wrapper.querySelector('.infiniteliste');
+        this.container = this.wrapper.querySelector('.infinitelist');
         
         //clone the delegate element from the root element.
         this.component = this.querySelector(this.props.delegate).cloneNode();
@@ -355,17 +357,24 @@ class KamiInfiniteList extends KamiComponent
     {
         return `
             ${this.props.useSearch ? this.renderSearch() : ''}
-            <div class="infiniteliste"></div>
+            <div class="infinitelist ${this.props.flex ? 'infinitelist--flex' : ''}"></div>
         `;        
     }
 
     public renderStyle() : string
     {
         return `
-            .infiniteliste{
+            .infinitelist{
                 width: ${this.props.width};
                 height : ${this.props.height};
                 overflow-y: scroll;
+            }
+
+            .infinitelist--flex{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-wrap: wrap;
             }
         `;
     }

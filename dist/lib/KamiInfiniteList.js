@@ -22,19 +22,8 @@ var KamiInfiniteList = /** @class */ (function (_super) {
     __extends(KamiInfiniteList, _super);
     function KamiInfiniteList() {
         var _this = _super.call(this) || this;
-        /**
-         * @property {Array<Object>} - store all the component get form the datasource
-         */
         _this.components = [];
-        /**
-         * is true if the list is in loading
-         * @property {Boolean} - loading stat
-         */
         _this.inLoad = false;
-        /**
-         * This property is at true if the datasource is at the end
-         * @property {Boolean} - stat of the datasource
-         */
         _this.end = false;
         _this.componentAttributes = [];
         return _this;
@@ -50,7 +39,8 @@ var KamiInfiniteList = /** @class */ (function (_super) {
                 'searchQuery',
                 'sortQuery',
                 'page',
-                'limit'
+                'limit',
+                'flex'
             ];
         },
         enumerable: true,
@@ -71,6 +61,7 @@ var KamiInfiniteList = /** @class */ (function (_super) {
                 pageQuery: this.getAttribute('pageQuery') || 'page',
                 limitQuery: this.getAttribute('limitQuery') || 'limit',
                 page: this.getAttribute('page') || '1',
+                flex: this.toBoolean(this.getAttribute('flex')) || false,
                 query: {},
             });
         }
@@ -91,7 +82,7 @@ var KamiInfiniteList = /** @class */ (function (_super) {
     KamiInfiniteList.prototype.connectedCallback = function () {
         var _this = this;
         //init dom.
-        this.container = this.wrapper.querySelector('.infiniteliste');
+        this.container = this.wrapper.querySelector('.infinitelist');
         //clone the delegate element from the root element.
         this.component = this.querySelector(this.props.delegate).cloneNode();
         //get all attribute from the delegate element.
@@ -102,7 +93,6 @@ var KamiInfiniteList = /** @class */ (function (_super) {
         this.container.addEventListener('scroll', function () {
             if (Math.round(_this.container.scrollTop + 20) > (_this.container.scrollHeight - _this.container.offsetHeight)) {
                 if (!_this.inLoad && !_this.end) {
-                    console.log('load');
                     //increment the page
                     _this.props.query.page++;
                     //set the state inLoad at true
@@ -131,13 +121,21 @@ var KamiInfiniteList = /** @class */ (function (_super) {
             });
         }
     };
+    /**
+     * Generate a request with the current datasource and query.
+     * @returns {Request} the generate request
+     */
     KamiInfiniteList.prototype.generateRequest = function () {
+        //generate an urk this the datasource
         var url = new URL(this.props.datasource);
+        //add query params
         for (var key in this.props.query) {
             url.searchParams.append(key, this.props.query[key]);
         }
+        //generate the request
         var requestInfo = url.toString();
         var request = new Request(requestInfo);
+        //return the request
         return request;
     };
     /**
@@ -246,6 +244,7 @@ var KamiInfiniteList = /** @class */ (function (_super) {
      */
     KamiInfiniteList.prototype.addComponent = function (component) {
         this.container.append(component);
+        return this;
     };
     /**
      * Get all attribute for a dom
@@ -262,10 +261,10 @@ var KamiInfiniteList = /** @class */ (function (_super) {
         return "\n            <searchbar-element \n                searchprops=\"" + (this.getUrlParam(this.props.searchQuery) || '') + "\"\n                ascendingprops=\"" + (this.getUrlParam(this.props.sortQuery) || false) + "\"\n            >\n            </searchbar-element>\n        ";
     };
     KamiInfiniteList.prototype.renderHtml = function () {
-        return "\n            " + (this.props.useSearch ? this.renderSearch() : '') + "\n            <div class=\"infiniteliste\"></div>\n        ";
+        return "\n            " + (this.props.useSearch ? this.renderSearch() : '') + "\n            <div class=\"infinitelist " + (this.props.flex ? 'infinitelist--flex' : '') + "\"></div>\n        ";
     };
     KamiInfiniteList.prototype.renderStyle = function () {
-        return "\n            .infiniteliste{\n                width: " + this.props.width + ";\n                height : " + this.props.height + ";\n                overflow-y: scroll;\n            }\n        ";
+        return "\n            .infinitelist{\n                width: " + this.props.width + ";\n                height : " + this.props.height + ";\n                overflow-y: scroll;\n            }\n\n            .infinitelist--flex{\n                display: flex;\n                justify-content: center;\n                align-items: center;\n                flex-wrap: wrap;\n            }\n        ";
     };
     return KamiInfiniteList;
 }(kami_component_1.default));

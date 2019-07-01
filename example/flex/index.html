@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+
+    *{
+        padding: 0;
+        margin: 0;
+    }
+
+    body{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+</style>
+<body>
+    
+    <kami-infinitelist
+        datasource="https://jsonplaceholder.typicode.com/photos"
+        delegate="photo-custom"
+        limitQuery="_limit"
+        pageQuery="_start"
+        limit='22'
+        width="700px"
+        flex="true"
+    >
+        <photo-custom
+            titleprops="title"
+            urlprops="url"
+        >
+        </post-custom>
+    </kami-infinitelist>
+
+
+    <script src="../../dist/KamiInfiniteList.umd.js"></script>
+    <script src="./KamiComponent.umd.js"></script>
+    <script src="./Photo.js"></script>
+    <script>
+        window.onload = function(){
+            customElements.define('photo-custom',Photo);
+            customElements.define('kami-infinitelist', KamiInfiniteList);
+        }
+    </script>
+</body>
+</html>
