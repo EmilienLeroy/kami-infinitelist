@@ -3,18 +3,45 @@ import '@webcomponents/webcomponentsjs/webcomponents-bundle';
 import 'web-animations-js';
 import KamiComponent from 'kami-component';
 declare class KamiInfiniteList extends KamiComponent {
-    components: any[];
-    inLoad: boolean;
-    end: boolean;
-    container: any;
-    component: any;
-    componentAttributes: any[];
-    data: any;
+    /**
+    * @property {Array<Object>} - store all the component get form the datasource
+    */
+    private components;
+    /**
+    * is true if the list is in loading
+    * @property {Boolean} - loading stat
+    */
+    private inLoad;
+    /**
+    * This property is at true if the datasource is at the end
+    * @property {Boolean} - stat of the datasource
+    */
+    private end;
+    /**
+     * @property {any} - the main dom container
+     */
+    private container;
+    /**
+     * @property {any} - the delegate component dom
+     */
+    private component;
+    /**
+     * @property {any[]} componentAttributes - attribute of your delegate components
+     */
+    private componentAttributes;
+    /**
+     * @property {any} data - current data load
+     */
+    private data;
     constructor();
     static readonly observedAttributes: string[];
     setProperties(): void;
     initEventListener(): void;
     connectedCallback(): void;
+    /**
+     * Generate a request with the current datasource and query.
+     * @returns {Request} the generate request
+     */
     generateRequest(): Request;
     /**
      * This methode get the data from the datasource.
@@ -46,7 +73,7 @@ declare class KamiInfiniteList extends KamiComponent {
      * Add a new component into the main container
      * @param {HTMLElement} component - add
      */
-    addComponent(component: any): void;
+    addComponent(component: HTMLElement): this;
     /**
      * Get all attribute for a dom
      * @param {HTMLElement} el - an html element this attr

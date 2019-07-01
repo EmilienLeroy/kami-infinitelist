@@ -7,36 +7,50 @@ import KamiComponent from 'kami-component';
 
 class KamiInfiniteList extends KamiComponent
 {
+    /**
+    * @property {Array<Object>} - store all the component get form the datasource
+    */
+    private components: any[];
     
-    components: any[];
-    inLoad: boolean;
-    end: boolean;
-    container: any;
-    component: any;
-    componentAttributes: any[];
-    data: any;
+    /**
+    * is true if the list is in loading
+    * @property {Boolean} - loading stat
+    */
+    private inLoad: boolean;
+
+    /**
+    * This property is at true if the datasource is at the end
+    * @property {Boolean} - stat of the datasource
+    */
+    private end: boolean;
+
+    /**
+     * @property {any} - the main dom container
+     */
+    private container: any;
+    
+    /**
+     * @property {any} - the delegate component dom
+     */
+    private component: any;
+
+    /**
+     * @property {any[]} componentAttributes - attribute of your delegate components
+     */
+    private componentAttributes: any[];
+
+    /**
+     * @property {any} data - current data load
+     */
+    private data: any;
 
     constructor()
     {
         super();
 
-        /**
-         * @property {Array<Object>} - store all the component get form the datasource
-         */
         this.components = [];
-        
-        /**
-         * is true if the list is in loading
-         * @property {Boolean} - loading stat
-         */
         this.inLoad = false;
-
-        /**
-         * This property is at true if the datasource is at the end
-         * @property {Boolean} - stat of the datasource
-         */
         this.end = false;
-
         this.componentAttributes = [];
     }
 
@@ -55,7 +69,7 @@ class KamiInfiniteList extends KamiComponent
     }
 
 
-    setProperties()
+    public setProperties() : void
     {
         let datasource: string | null = this.getAttribute('datasource');
         let delegate: string | null = this.getAttribute('delegate');
@@ -89,11 +103,12 @@ class KamiInfiniteList extends KamiComponent
 
     }
 
-    initEventListener(): void { 
+    public initEventListener() : void 
+    { 
         //add your listnener here 
     }
 
-    connectedCallback()
+    public connectedCallback() : void
     {
         //init dom.
         this.container = this.wrapper.querySelector('.infiniteliste');
@@ -113,7 +128,6 @@ class KamiInfiniteList extends KamiComponent
 
                 if(!this.inLoad && !this.end){
                     
-                    console.log('load')
                     //increment the page
                     this.props.query.page ++;
                     
@@ -161,25 +175,34 @@ class KamiInfiniteList extends KamiComponent
         
     }
 
+    /**
+     * Generate a request with the current datasource and query.
+     * @returns {Request} the generate request
+     */
     public generateRequest(): Request
     {
+        //generate an urk this the datasource
         let url: URL = new URL(this.props.datasource);
         
+        //add query params
         for(let key in this.props.query){
             url.searchParams.append(key, this.props.query[key])
         }
 
+        //generate the request
         let requestInfo : RequestInfo = url.toString()
         let request = new Request(requestInfo);
         
+        //return the request
         return request
     }
+
     /**
      * This methode get the data from the datasource.
      * After it will create all the dom and append this into the infinite list.
      * @returns {InfiniteList} this
      */
-    getData()
+    public getData() : this
     {
         
         let request : Request = this.generateRequest();
@@ -246,7 +269,7 @@ class KamiInfiniteList extends KamiComponent
      * @param {String} object.value - the value of the param
      * @returns {InfiniteList} this 
      */
-    updateData(param:string,value:string)
+    public updateData(param:string, value:string) : this
     {
         this
             //update the url browser
@@ -263,7 +286,7 @@ class KamiInfiniteList extends KamiComponent
      * Reset all the property of list to reload new data.
      * @returns {InfiniteList} this
      */
-    resetList()
+    public resetList() : this
     {
         //remove all component store
         this.components = [];
@@ -286,7 +309,7 @@ class KamiInfiniteList extends KamiComponent
      * @param {String} path - path 
      * @param {String} separator 
      */
-    convertData(obj=self, path:any, separator='.')
+    public convertData(obj=self, path:any, separator='.') : any
     {
         
         let properties = Array.isArray(path) ? path : path.split(separator);
@@ -297,9 +320,10 @@ class KamiInfiniteList extends KamiComponent
      * Add a new component into the main container
      * @param {HTMLElement} component - add  
      */
-    addComponent(component:any)
+    public addComponent(component: HTMLElement) : this
     {
         this.container.append(component);
+        return this;
     }
 
     /**
@@ -307,7 +331,7 @@ class KamiInfiniteList extends KamiComponent
      * @param {HTMLElement} el - an html element this attr
      * @returns {Array.<String>} - all attribute in a array 
      */
-    getAttributes(el:any)
+    public getAttributes(el:any) : any[]
     {
         for (var i = 0, atts = el.attributes, n = atts.length, arr = []; i < n; i++){
             arr.push(atts[i].nodeName);
@@ -316,7 +340,7 @@ class KamiInfiniteList extends KamiComponent
         return arr;
     }
 
-    renderSearch()
+    public renderSearch() : string
     {
         return `
             <searchbar-element 
@@ -327,7 +351,7 @@ class KamiInfiniteList extends KamiComponent
         `;
     }
 
-    renderHtml()
+    public renderHtml() : string
     {
         return `
             ${this.props.useSearch ? this.renderSearch() : ''}
@@ -335,7 +359,7 @@ class KamiInfiniteList extends KamiComponent
         `;        
     }
 
-    renderStyle()
+    public renderStyle() : string
     {
         return `
             .infiniteliste{
