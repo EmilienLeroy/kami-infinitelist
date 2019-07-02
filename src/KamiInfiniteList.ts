@@ -77,7 +77,7 @@ class KamiInfiniteList extends KamiComponent
 
         if(datasource && delegate){
             this.props = this.observe({
-                datasource: new URL(datasource),
+                datasource: datasource,
                 delegate:  delegate,
                 width: this.getAttribute('width') || '100%',
                 height:  this.getAttribute('height') || '100vh',
@@ -183,20 +183,31 @@ class KamiInfiniteList extends KamiComponent
      */
     public generateRequest(): Request
     {
-        //generate an urk this the datasource
-        let url: URL = new URL(this.props.datasource);
-        
-        //add query params
-        for(let key in this.props.query){
-            url.searchParams.append(key, this.props.query[key])
-        }
+        try {
+            //generate an url this the datasource
+            let url : URL;
+            try {
+                url = new URL(this.props.datasource);
+            } catch (error) {
+                url = new URL(`${window.location.origin}${this.props.datasource}`);
+            }
+                    
+            //add query params
+            for(let key in this.props.query){
+                url.searchParams.append(key, this.props.query[key])
+            }
 
-        //generate the request
-        let requestInfo : RequestInfo = url.toString()
-        let request = new Request(requestInfo);
+            //generate the request
+            let requestInfo : RequestInfo = url.toString()
+            let request = new Request(requestInfo);
+            
+            //return the request
+            return request    
+
+        } catch (error) {
+            throw new Error('Invalid datasource !')
+        }
         
-        //return the request
-        return request
     }
 
     /**

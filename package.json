@@ -1,6 +1,6 @@
 {
   "name": "kami-infinitelist",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "keywords": [],
   "main": "dist/KamiInfiniteList.umd.js",
