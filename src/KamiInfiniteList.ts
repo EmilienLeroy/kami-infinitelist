@@ -383,9 +383,10 @@ class KamiInfiniteList extends KamiComponent
 
             .infinitelist--flex{
                 display: flex;
-                justify-content: center;
+                justify-content: start;
                 align-items: center;
                 flex-wrap: wrap;
+                align-content: start;
             }
         `;
     }

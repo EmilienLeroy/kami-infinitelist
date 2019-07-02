@@ -1048,7 +1048,7 @@
             return "\n            " + (this.props.useSearch ? this.renderSearch() : '') + "\n            <div class=\"infinitelist " + (this.props.flex ? 'infinitelist--flex' : '') + "\"></div>\n        ";
         };
         KamiInfiniteList.prototype.renderStyle = function () {
-            return "\n            .infinitelist{\n                width: " + this.props.width + ";\n                height : " + this.props.height + ";\n                overflow-y: scroll;\n            }\n\n            .infinitelist--flex{\n                display: flex;\n                justify-content: center;\n                align-items: center;\n                flex-wrap: wrap;\n            }\n        ";
+            return "\n            .infinitelist{\n                width: " + this.props.width + ";\n                height : " + this.props.height + ";\n                overflow-y: scroll;\n            }\n\n            .infinitelist--flex{\n                display: flex;\n                justify-content: start;\n                align-items: center;\n                flex-wrap: wrap;\n                align-content: start;\n            }\n        ";
         };
         return KamiInfiniteList;
     }(KamiComponent));
