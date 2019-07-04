@@ -34,16 +34,23 @@ class Photo extends KamiComponent
     connectedCallback()
     {
         this.wrapper.style.position = 'relative';
-        this.wrapper.animate(
-            [
-                {  transform: 'translateY(20px)', opacity: '0'  },
-                {  transform: 'translateY(0px)', opacity: '1' }
-            ], {
-                duration: 1000,
-                easing: 'ease'
-            }
-        );
 
+        this.observeWindows = new IntersectionObserver(this.display.bind(this),{
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        });
+
+        this.observeWindows.observe(this)
+    }
+
+    display(changes)
+    {
+        changes.forEach(change => {
+            if (change.intersectionRatio > 0) {
+                this.wrapper.querySelector('.photo').classList.add('photo--display');
+            }
+        });
     }
 
 
@@ -77,6 +84,15 @@ class Photo extends KamiComponent
                 height: 200px;
                 box-sizing: border-box;
                 color:white;
+                transform: translateY(20px);
+                opacity: 0;
+                transition: all 1s ease;
+            }
+
+            .photo--display{
+                transform: translateY(0px);
+                opacity: 1;
+                transition: all 1s ease;
             }
 
             .photo__title:hover{

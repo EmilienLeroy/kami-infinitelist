@@ -2,6 +2,11 @@
 
 An infinite scroller. Just add a datasource provider and a delegate web components and it's work !
 
+## Demo
+
+* [Simple](https://emilienleroy.fr/assets/infinite/simple/)
+* [Flex](https://emilienleroy.fr/assets/infinite/flex/)
+
 <p align="center">
   <img  src="https://emilienleroy.fr/assets/flex.gif">
 </p>
@@ -55,6 +60,12 @@ For use the infinite list you need two prerequire.
 
  The datasource should be an JSON endpoint with query pagination.
  For exemple see the [jsonplaceholder](http://jsonplaceholder.typicode.com/posts?_start=10&_limit=10) api work as well.
+ Into the request, the component will add a query with some paramters :
+
+ * page: the number of the current page
+ * limit: the number of item by page
+
+ You can update the param name with the properties *pageQuery* and *limiQuery*. For more information see the [Props](#Props) section.
 
  ### Delegate
 
@@ -145,17 +156,25 @@ class Post extends KamiComponent
 
     connectedCallback()
     {
-        this.wrapper.style.position = 'relative';
-        this.wrapper.animate(
-            [
-                {  transform: 'translateY(20px)', opacity: '0'  },
-                {  transform: 'translateY(0px)', opacity: '1' }
-            ], {
-                duration: 1000,
-                easing: 'ease'
-            }
-        );
+        this.observeWindows = new IntersectionObserver(this.display.bind(this),{
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        });
 
+        this.observeWindows.observe(this)
+        this.wrapper.style.position = 'relative';
+
+    }
+
+    display(changes)
+    {
+        changes.forEach(change => {
+            if (change.intersectionRatio > 0) {
+                this.wrapper.querySelector('.post').classList.add('post--display');
+            }
+        });
+        
     }
 
 
@@ -180,6 +199,15 @@ class Post extends KamiComponent
                 background-color: ghostwhite;
                 font-family: sans-serif;
                 cursor: pointer;
+                transform: translateY(20px);
+                opacity: 0;
+                transition: all 1s ease;
+            }
+
+            .post--display{
+                transform: translateY(0px);
+                opacity: 1;
+                transition: all 1s ease;
             }
 
             .post:hover{
@@ -196,8 +224,8 @@ class Post extends KamiComponent
                 text-transform: capitalize;
             }
             
-            `;
-        }
+        `;
+    }
 
 }
 
