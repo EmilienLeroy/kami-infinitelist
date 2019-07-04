@@ -17,7 +17,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 require("@webcomponents/webcomponentsjs/custom-elements-es5-adapter");
 require("@webcomponents/webcomponentsjs/webcomponents-bundle");
 require("web-animations-js");
+require("@polymer/iron-icon/iron-icon.js");
+require("@polymer/iron-icons/iron-icons.js");
 var kami_component_1 = require("kami-component");
+var KamiSearchBar_1 = require("./KamiSearchBar");
 var KamiInfiniteList = /** @class */ (function (_super) {
     __extends(KamiInfiniteList, _super);
     function KamiInfiniteList() {
@@ -72,7 +75,9 @@ var KamiInfiniteList = /** @class */ (function (_super) {
         this.props.query[this.props.limitQuery] = this.getAttribute('limit') || '10';
         if (this.props.useSearch) {
             //update the query with url query
-            this.props.query[this.props.searchQuery] = this.getUrlParam(this.props.searchQuery);
+            if (this.getUrlParam(this.props.searchQuery)) {
+                this.props.query[this.props.searchQuery] = this.getUrlParam(this.props.searchQuery);
+            }
             this.props.query[this.props.sortQuery] = this.getUrlParam(this.props.sortQuery);
         }
     };
@@ -106,14 +111,15 @@ var KamiInfiniteList = /** @class */ (function (_super) {
         //only if the useSearch property is set at true
         if (this.props.useSearch) {
             //event listener for the sort event
-            this.wrapper.querySelector('searchbar-element').addEventListener('sort', function (event) {
+            this.wrapper.querySelector(KamiSearchBar_1.default.tag).addEventListener('sort', function (event) {
+                console.log(event.detail);
                 //update the query
                 _this.props.query[_this.props.sortQuery] = event.detail.isAscending;
                 //update the data
                 _this.updateData(_this.props.sortQuery, event.detail.isAscending);
             });
             //event listener for the search event
-            this.wrapper.querySelector('searchbar-element').addEventListener('search', function (event) {
+            this.wrapper.querySelector(KamiSearchBar_1.default.tag).addEventListener('search', function (event) {
                 //update the query
                 _this.props.query[_this.props.searchQuery] = event.detail.search;
                 //update the data
@@ -269,7 +275,7 @@ var KamiInfiniteList = /** @class */ (function (_super) {
         return arr;
     };
     KamiInfiniteList.prototype.renderSearch = function () {
-        return "\n            <searchbar-element \n                searchprops=\"" + (this.getUrlParam(this.props.searchQuery) || '') + "\"\n                ascendingprops=\"" + (this.getUrlParam(this.props.sortQuery) || false) + "\"\n            >\n            </searchbar-element>\n        ";
+        return "\n            <" + KamiSearchBar_1.default.tag + "\n                searchprops=\"" + (this.getUrlParam(this.props.searchQuery) || '') + "\"\n                ascendingprops=\"" + (this.getUrlParam(this.props.sortQuery) || false) + "\"\n            >\n            </" + KamiSearchBar_1.default.tag + ">\n        ";
     };
     KamiInfiniteList.prototype.renderHtml = function () {
         return "\n            " + (this.props.useSearch ? this.renderSearch() : '') + "\n            <div class=\"infinitelist " + (this.props.flex ? 'infinitelist--flex' : '') + "\"></div>\n        ";

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+
+    *{
+        padding: 0;
+        margin: 0;
+    }
+
+    body{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+</style>
+<body>
+    
+    <kami-infinitelist
+        datasource="https://jsonplaceholder.typicode.com/posts/"
+        delegate="post-custom"
+        limitQuery="_limit"
+        pageQuery="_start"
+        searchQuery="title_like"
+        limit='22'
+        width="700px"
+        useSearch="true"
+    >
+        <post-custom
+            titleprops="title"
+            bodyprops="body"
+        >
+        </post-custom>
+    </kami-infinitelist>
+
+
+    <script src="../../dist/KamiInfiniteList.umd.js"></script>
+    <script src="./KamiComponent.umd.js"></script>
+    <script src="./Post.js"></script>
+    <script>
+        window.onload = function(){
+            customElements.define('post-custom',Post);
+            customElements.define('kami-infinitelist', KamiInfiniteList);
+        }
+    </script>
+</body>
+</html>
