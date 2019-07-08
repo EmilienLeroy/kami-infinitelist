@@ -1032,7 +1032,7 @@ var KamiInfiniteList = /** @class */ (function (_super) {
     /**
      * This methode get the data from the datasource.
      * After it will create all the dom and append this into the infinite list.
-     * @returns {InfiniteList} this
+     * @returns {KamiInfiniteList} this
      */
     KamiInfiniteList.prototype.getData = function () {
         var _this = this;
@@ -1098,7 +1098,7 @@ var KamiInfiniteList = /** @class */ (function (_super) {
      * @param {Object} object
      * @param {String} object.param - param for the url
      * @param {String} object.value - the value of the param
-     * @returns {InfiniteList} this
+     * @returns {KamiInfiniteList} this
      */
     KamiInfiniteList.prototype.updateData = function (param, value) {
         this
@@ -1112,7 +1112,7 @@ var KamiInfiniteList = /** @class */ (function (_super) {
     };
     /**
      * Reset all the property of list to reload new data.
-     * @returns {InfiniteList} this
+     * @returns {KamiInfiniteList} this
      */
     KamiInfiniteList.prototype.resetList = function () {
         //remove all component store
@@ -1125,6 +1125,13 @@ var KamiInfiniteList = /** @class */ (function (_super) {
         this.end = false;
         return this;
     };
+    /**
+     * Dispatch the custom event clickElement with the component clicked
+     * and the index into the list.
+     * @param component {HTMLElement} - the component clicked
+     * @param index {number} - the component index
+     * @returns {KamiInfiniteList} this
+     */
     KamiInfiniteList.prototype.clickedEvent = function (component, index) {
         //update click element
         this.clickElement = component;
@@ -1134,6 +1141,11 @@ var KamiInfiniteList = /** @class */ (function (_super) {
         this.dispatchEvent(this.clickElementEvent);
         return this;
     };
+    /**
+     * Create a new custom event with the new click element value
+     * @param index {number} - index position of the element click
+     * @returns {CustomEvent<{element: HTMLElement, index: number }>} the custom event
+     */
     KamiInfiniteList.prototype.updateClickElementEvent = function (index) {
         return new CustomEvent('clickElement', {
             detail: {

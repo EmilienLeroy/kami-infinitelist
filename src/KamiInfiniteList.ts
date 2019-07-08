@@ -3,7 +3,6 @@ import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
 import '@webcomponents/webcomponentsjs/webcomponents-bundle';
 import 'web-animations-js';
 
-
 import KamiComponent from 'kami-component';
 import KamiSearchBar from './KamiSearchBar';
 
@@ -46,15 +45,18 @@ class KamiInfiniteList extends KamiComponent {
     private data: any;
 
     /**
-     * 
+     * @property {CustomEvent<{element: HTMLElement, index: number }>} clickElementEvent - event when an element of the list is clicked.
      */
     private clickElementEvent: CustomEvent<{element: HTMLElement, index: number }>;
 
     /**
-     * 
+     * @property {HTMLElement} clickElement - the last clicked element into the list
      */
     private clickElement: HTMLElement | null;
 
+    /**
+     * @property {number} index - number of element into the list.
+     */
     private index: number;
 
     constructor() {
@@ -216,7 +218,7 @@ class KamiInfiniteList extends KamiComponent {
     /**
      * This methode get the data from the datasource.
      * After it will create all the dom and append this into the infinite list.
-     * @returns {InfiniteList} this
+     * @returns {KamiInfiniteList} this
      */
     public getData(): this {
         let request: Request = this.generateRequest();
@@ -293,7 +295,7 @@ class KamiInfiniteList extends KamiComponent {
      * @param {Object} object
      * @param {String} object.param - param for the url
      * @param {String} object.value - the value of the param
-     * @returns {InfiniteList} this
+     * @returns {KamiInfiniteList} this
      */
     public updateData(param: string, value: string): this {
         this
@@ -309,7 +311,7 @@ class KamiInfiniteList extends KamiComponent {
 
     /**
      * Reset all the property of list to reload new data.
-     * @returns {InfiniteList} this
+     * @returns {KamiInfiniteList} this
      */
     public resetList(): this {
         //remove all component store
@@ -327,6 +329,13 @@ class KamiInfiniteList extends KamiComponent {
         return this;
     }
 
+    /**
+     * Dispatch the custom event clickElement with the component clicked
+     * and the index into the list. 
+     * @param component {HTMLElement} - the component clicked
+     * @param index {number} - the component index
+     * @returns {KamiInfiniteList} this
+     */
     public clickedEvent(component : HTMLElement, index: number) : this
     {
         //update click element
@@ -341,6 +350,11 @@ class KamiInfiniteList extends KamiComponent {
         return this;
     }
 
+    /**
+     * Create a new custom event with the new click element value
+     * @param index {number} - index position of the element click
+     * @returns {CustomEvent<{element: HTMLElement, index: number }>} the custom event
+     */
     public updateClickElementEvent(index: number)
     {
         return new CustomEvent('clickElement', {

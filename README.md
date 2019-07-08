@@ -247,6 +247,16 @@ class Post extends KamiComponent
 | limit         | Number   | Number of item display                     | false   | 10                              |
 | flex          | Boolean  | Use the flex property                      | false   | false                           |
 
+
+## Events
+
+
+| name            |  trigger                                | event.detail                                   |
+|---------------- |-----------------------------------------|------------------------------------------------|
+| clickElement    | When a element of the list is clicked   |  { element: *HTMLElement*, index: *number* }   |
+
+
+
 ## Contribute
 
 We would love you for the contribution to ``kami-infinitelist`` project, check the ``CONTRIBUTING`` file for more info.

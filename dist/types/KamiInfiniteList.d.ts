@@ -34,13 +34,16 @@ declare class KamiInfiniteList extends KamiComponent {
      */
     private data;
     /**
-     *
+     * @property {CustomEvent<{element: HTMLElement, index: number }>} clickElementEvent - event when an element of the list is clicked.
      */
     private clickElementEvent;
     /**
-     *
+     * @property {HTMLElement} clickElement - the last clicked element into the list
      */
     private clickElement;
+    /**
+     * @property {number} index - number of element into the list.
+     */
     private index;
     constructor();
     static readonly observedAttributes: string[];
@@ -55,7 +58,7 @@ declare class KamiInfiniteList extends KamiComponent {
     /**
      * This methode get the data from the datasource.
      * After it will create all the dom and append this into the infinite list.
-     * @returns {InfiniteList} this
+     * @returns {KamiInfiniteList} this
      */
     getData(): this;
     /**
@@ -63,15 +66,27 @@ declare class KamiInfiniteList extends KamiComponent {
      * @param {Object} object
      * @param {String} object.param - param for the url
      * @param {String} object.value - the value of the param
-     * @returns {InfiniteList} this
+     * @returns {KamiInfiniteList} this
      */
     updateData(param: string, value: string): this;
     /**
      * Reset all the property of list to reload new data.
-     * @returns {InfiniteList} this
+     * @returns {KamiInfiniteList} this
      */
     resetList(): this;
+    /**
+     * Dispatch the custom event clickElement with the component clicked
+     * and the index into the list.
+     * @param component {HTMLElement} - the component clicked
+     * @param index {number} - the component index
+     * @returns {KamiInfiniteList} this
+     */
     clickedEvent(component: HTMLElement, index: number): this;
+    /**
+     * Create a new custom event with the new click element value
+     * @param index {number} - index position of the element click
+     * @returns {CustomEvent<{element: HTMLElement, index: number }>} the custom event
+     */
     updateClickElementEvent(index: number): CustomEvent<{
         element: HTMLElement;
         index: number;
