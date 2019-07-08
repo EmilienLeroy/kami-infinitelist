@@ -1,8 +1,6 @@
 import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
 import '@webcomponents/webcomponentsjs/webcomponents-bundle';
 import 'web-animations-js';
-import '@polymer/iron-icon/iron-icon.js';
-import '@polymer/iron-icons/iron-icons.js';
 import KamiComponent from 'kami-component';
 declare class KamiInfiniteList extends KamiComponent {
     /**
@@ -35,8 +33,15 @@ declare class KamiInfiniteList extends KamiComponent {
      * @property {any} data - current data load
      */
     private data;
-    clickElementEvent: any;
-    clickElement: any;
+    /**
+     *
+     */
+    private clickElementEvent;
+    /**
+     *
+     */
+    private clickElement;
+    private index;
     constructor();
     static readonly observedAttributes: string[];
     setProperties(): void;
@@ -66,7 +71,11 @@ declare class KamiInfiniteList extends KamiComponent {
      * @returns {InfiniteList} this
      */
     resetList(): this;
-    clickedEvent(component: HTMLElement): this;
+    clickedEvent(component: HTMLElement, index: number): this;
+    updateClickElementEvent(index: number): CustomEvent<{
+        element: HTMLElement;
+        index: number;
+    }>;
     /**
      * Convert your data
      * @param {Object} obj - Object to convert

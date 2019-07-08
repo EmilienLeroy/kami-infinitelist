@@ -3,8 +3,6 @@ import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
 import '@webcomponents/webcomponentsjs/webcomponents-bundle';
 import 'web-animations-js';
 
-import '@polymer/iron-icon/iron-icon.js';
-import '@polymer/iron-icons/iron-icons.js';
 
 import KamiComponent from 'kami-component';
 import KamiSearchBar from './KamiSearchBar';
@@ -46,8 +44,18 @@ class KamiInfiniteList extends KamiComponent {
      * @property {any} data - current data load
      */
     private data: any;
-    clickElementEvent: any;
-    clickElement: any;
+
+    /**
+     * 
+     */
+    private clickElementEvent: CustomEvent<{element: HTMLElement, index: number }>;
+
+    /**
+     * 
+     */
+    private clickElement: HTMLElement | null;
+
+    private index: number;
 
     constructor() {
         super();
@@ -56,6 +64,9 @@ class KamiInfiniteList extends KamiComponent {
         this.inLoad = false;
         this.end = false;
         this.componentAttributes = [];
+        this.index = 0;
+        this.clickElement = null;
+        this.clickElementEvent = this.updateClickElementEvent(this.index);
     }
 
 
@@ -245,10 +256,17 @@ class KamiInfiniteList extends KamiComponent {
                                     : (component.innerHTML = dataProvide);
                             });
 
+                            //store the component
                             this.components.push(component);
 
+                            //store the component index
+                            component.setAttribute('index', this.index);
+
+                            //update the component index
+                            this.index ++;
+
                             //dispatch a new event with the clicked component
-                            component.addEventListener('click',()=>{ this.clickedEvent(component); });
+                            component.addEventListener('click',()=>{ this.clickedEvent(component, parseInt(component.getAttribute('index'))); });
 
                             this.addComponent(component);
                         } else {
@@ -309,19 +327,28 @@ class KamiInfiniteList extends KamiComponent {
         return this;
     }
 
-    clickedEvent(component : HTMLElement)
+    public clickedEvent(component : HTMLElement, index: number) : this
     {
+        //update click element
         this.clickElement = component;
         
-        this.clickElementEvent = new CustomEvent('clickElement', {
-            detail: {
-                element: this.clickElement
-            }
-        });
+        //reset the data send
+        this.clickElementEvent = this.updateClickElementEvent(index);
         
+        //send the event
         this.dispatchEvent(this.clickElementEvent);
         
         return this;
+    }
+
+    public updateClickElementEvent(index: number)
+    {
+        return new CustomEvent('clickElement', {
+            detail: {
+                element: this.clickElement!,
+                index: index
+            }
+        });
     }
 
     /**

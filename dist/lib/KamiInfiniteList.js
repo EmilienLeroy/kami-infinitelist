@@ -17,8 +17,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 require("@webcomponents/webcomponentsjs/custom-elements-es5-adapter");
 require("@webcomponents/webcomponentsjs/webcomponents-bundle");
 require("web-animations-js");
-require("@polymer/iron-icon/iron-icon.js");
-require("@polymer/iron-icons/iron-icons.js");
 var kami_component_1 = require("kami-component");
 var KamiSearchBar_1 = require("./KamiSearchBar");
 var KamiInfiniteList = /** @class */ (function (_super) {
@@ -29,6 +27,9 @@ var KamiInfiniteList = /** @class */ (function (_super) {
         _this.inLoad = false;
         _this.end = false;
         _this.componentAttributes = [];
+        _this.index = 0;
+        _this.clickElement = null;
+        _this.clickElementEvent = _this.updateClickElementEvent(_this.index);
         return _this;
     }
     Object.defineProperty(KamiInfiniteList, "observedAttributes", {
@@ -189,9 +190,14 @@ var KamiInfiniteList = /** @class */ (function (_super) {
                                 ? component_1.setAttribute(atts, dataProvide)
                                 : (component_1.innerHTML = dataProvide);
                         });
+                        //store the component
                         _this.components.push(component_1);
+                        //store the component index
+                        component_1.setAttribute('index', _this.index);
+                        //update the component index
+                        _this.index++;
                         //dispatch a new event with the clicked component
-                        component_1.addEventListener('click', function () { _this.clickedEvent(component_1); });
+                        component_1.addEventListener('click', function () { _this.clickedEvent(component_1, parseInt(component_1.getAttribute('index'))); });
                         _this.addComponent(component_1);
                     }
                     else {
@@ -249,15 +255,22 @@ var KamiInfiniteList = /** @class */ (function (_super) {
         this.end = false;
         return this;
     };
-    KamiInfiniteList.prototype.clickedEvent = function (component) {
+    KamiInfiniteList.prototype.clickedEvent = function (component, index) {
+        //update click element
         this.clickElement = component;
-        this.clickElementEvent = new CustomEvent('clickElement', {
-            detail: {
-                element: this.clickElement
-            }
-        });
+        //reset the data send
+        this.clickElementEvent = this.updateClickElementEvent(index);
+        //send the event
         this.dispatchEvent(this.clickElementEvent);
         return this;
+    };
+    KamiInfiniteList.prototype.updateClickElementEvent = function (index) {
+        return new CustomEvent('clickElement', {
+            detail: {
+                element: this.clickElement,
+                index: index
+            }
+        });
     };
     /**
      * Convert your data

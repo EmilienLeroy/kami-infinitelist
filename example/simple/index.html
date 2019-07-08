@@ -46,7 +46,7 @@
             customElements.define('post-custom',Post);
             customElements.define('kami-infinitelist', KamiInfiniteList);
             document.querySelector('kami-infinitelist').addEventListener('clickElement',(e)=>{
-                e.detail.element.remove();
+                console.log(e.detail)
             })
         }
     </script>
