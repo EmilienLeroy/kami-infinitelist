@@ -46,6 +46,8 @@ class KamiInfiniteList extends KamiComponent {
      * @property {any} data - current data load
      */
     private data: any;
+    clickElementEvent: any;
+    clickElement: any;
 
     constructor() {
         super();
@@ -55,6 +57,7 @@ class KamiInfiniteList extends KamiComponent {
         this.end = false;
         this.componentAttributes = [];
     }
+
 
     static get observedAttributes() {
         return [
@@ -107,9 +110,7 @@ class KamiInfiniteList extends KamiComponent {
         }
     }
 
-    public initEventListener(): void {
-        //add your listnener here
-    }
+    public initEventListener(): void { }
 
     public connectedCallback(): void {
         //init dom.
@@ -245,6 +246,10 @@ class KamiInfiniteList extends KamiComponent {
                             });
 
                             this.components.push(component);
+
+                            //dispatch a new event with the clicked component
+                            component.addEventListener('click',()=>{ this.clickedEvent(component); });
+
                             this.addComponent(component);
                         } else {
                             throw new Error('Data should be an array of object !');
@@ -301,6 +306,21 @@ class KamiInfiniteList extends KamiComponent {
         //reset the end property
         this.end = false;
 
+        return this;
+    }
+
+    clickedEvent(component : HTMLElement)
+    {
+        this.clickElement = component;
+        
+        this.clickElementEvent = new CustomEvent('clickElement', {
+            detail: {
+                element: this.clickElement
+            }
+        });
+        
+        this.dispatchEvent(this.clickElementEvent);
+        
         return this;
     }
 

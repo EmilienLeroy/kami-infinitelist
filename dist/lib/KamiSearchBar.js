@@ -82,9 +82,9 @@ var KamiSearchBar = /** @class */ (function (_super) {
      * @returns {SearchBar} this
      */
     KamiSearchBar.prototype.initSort = function () {
-        this.props.isAscending ?
-            this.props.sortIcone = 'arrow-drop-down' :
-            this.props.sortIcone = 'arrow-drop-up';
+        this.props.isAscending
+            ? (this.props.sortIcone = 'arrow-drop-down')
+            : (this.props.sortIcone = 'arrow-drop-up');
         return this;
     };
     /**

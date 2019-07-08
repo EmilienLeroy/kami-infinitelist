@@ -6,18 +6,18 @@ import '@polymer/iron-icons/iron-icons.js';
 import KamiComponent from 'kami-component';
 declare class KamiInfiniteList extends KamiComponent {
     /**
-    * @property {Array<Object>} - store all the component get form the datasource
-    */
+     * @property {Array<Object>} - store all the component get form the datasource
+     */
     private components;
     /**
-    * is true if the list is in loading
-    * @property {Boolean} - loading stat
-    */
+     * is true if the list is in loading
+     * @property {Boolean} - loading stat
+     */
     private inLoad;
     /**
-    * This property is at true if the datasource is at the end
-    * @property {Boolean} - stat of the datasource
-    */
+     * This property is at true if the datasource is at the end
+     * @property {Boolean} - stat of the datasource
+     */
     private end;
     /**
      * @property {any} - the main dom container
@@ -35,6 +35,8 @@ declare class KamiInfiniteList extends KamiComponent {
      * @property {any} data - current data load
      */
     private data;
+    clickElementEvent: any;
+    clickElement: any;
     constructor();
     static readonly observedAttributes: string[];
     setProperties(): void;
@@ -64,6 +66,7 @@ declare class KamiInfiniteList extends KamiComponent {
      * @returns {InfiniteList} this
      */
     resetList(): this;
+    clickedEvent(component: HTMLElement): this;
     /**
      * Convert your data
      * @param {Object} obj - Object to convert

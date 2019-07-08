@@ -65,7 +65,7 @@ var KamiInfiniteList = /** @class */ (function (_super) {
                 limitQuery: this.getAttribute('limitQuery') || 'limit',
                 page: this.getAttribute('page') || '1',
                 flex: this.toBoolean(this.getAttribute('flex')) || false,
-                query: {},
+                query: {}
             });
         }
         else {
@@ -81,9 +81,7 @@ var KamiInfiniteList = /** @class */ (function (_super) {
             this.props.query[this.props.sortQuery] = this.getUrlParam(this.props.sortQuery);
         }
     };
-    KamiInfiniteList.prototype.initEventListener = function () {
-        //add your listnener here 
-    };
+    KamiInfiniteList.prototype.initEventListener = function () { };
     KamiInfiniteList.prototype.connectedCallback = function () {
         var _this = this;
         //init dom.
@@ -96,7 +94,8 @@ var KamiInfiniteList = /** @class */ (function (_super) {
         this.getData();
         //init scroll listener
         this.container.addEventListener('scroll', function () {
-            if (Math.round(_this.container.scrollTop + 20) > (_this.container.scrollHeight - _this.container.offsetHeight)) {
+            if (Math.round(_this.container.scrollTop + 20) >
+                _this.container.scrollHeight - _this.container.offsetHeight) {
                 if (!_this.inLoad && !_this.end) {
                     //increment the page
                     _this.props.query.page++;
@@ -111,7 +110,9 @@ var KamiInfiniteList = /** @class */ (function (_super) {
         //only if the useSearch property is set at true
         if (this.props.useSearch) {
             //event listener for the sort event
-            this.wrapper.querySelector(KamiSearchBar_1.default.tag).addEventListener('sort', function (event) {
+            this.wrapper
+                .querySelector(KamiSearchBar_1.default.tag)
+                .addEventListener('sort', function (event) {
                 console.log(event.detail);
                 //update the query
                 _this.props.query[_this.props.sortQuery] = event.detail.isAscending;
@@ -119,7 +120,9 @@ var KamiInfiniteList = /** @class */ (function (_super) {
                 _this.updateData(_this.props.sortQuery, event.detail.isAscending);
             });
             //event listener for the search event
-            this.wrapper.querySelector(KamiSearchBar_1.default.tag).addEventListener('search', function (event) {
+            this.wrapper
+                .querySelector(KamiSearchBar_1.default.tag)
+                .addEventListener('search', function (event) {
                 //update the query
                 _this.props.query[_this.props.searchQuery] = event.detail.search;
                 //update the data
@@ -182,11 +185,13 @@ var KamiInfiniteList = /** @class */ (function (_super) {
                         var component_1 = _this.component.cloneNode();
                         _this.componentAttributes.forEach(function (atts) {
                             var dataProvide = _this.convertData(data, component_1.getAttribute(atts.toString()));
-                            atts != 'slots' ?
-                                component_1.setAttribute(atts, dataProvide) :
-                                component_1.innerHTML = dataProvide;
+                            atts != 'slots'
+                                ? component_1.setAttribute(atts, dataProvide)
+                                : (component_1.innerHTML = dataProvide);
                         });
                         _this.components.push(component_1);
+                        //dispatch a new event with the clicked component
+                        component_1.addEventListener('click', function () { _this.clickedEvent(component_1); });
                         _this.addComponent(component_1);
                     }
                     else {
@@ -203,9 +208,10 @@ var KamiInfiniteList = /** @class */ (function (_super) {
             else {
                 throw new Error('Data should be an array of object !');
             }
-            //at the end the inload state is set as false 
+            //at the end the inload state is set as false
             _this.inLoad = false;
-        }).catch(function (error) {
+        })
+            .catch(function (error) {
             //error handling
             console.log(error.message);
         });
@@ -241,6 +247,16 @@ var KamiInfiniteList = /** @class */ (function (_super) {
         this.props.query.page = this.props.page;
         //reset the end property
         this.end = false;
+        return this;
+    };
+    KamiInfiniteList.prototype.clickedEvent = function (component) {
+        this.clickElement = component;
+        this.clickElementEvent = new CustomEvent('clickElement', {
+            detail: {
+                element: this.clickElement
+            }
+        });
+        this.dispatchEvent(this.clickElementEvent);
         return this;
     };
     /**
