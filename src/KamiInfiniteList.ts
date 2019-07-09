@@ -3,6 +3,11 @@ import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
 import '@webcomponents/webcomponentsjs/webcomponents-bundle';
 import 'web-animations-js';
 
+if(!customElements.get('iron-icon')){
+    import('@polymer/iron-icons');
+    import('@polymer/iron-icon');
+}
+
 import KamiComponent from 'kami-component';
 import KamiSearchBar from './KamiSearchBar';
 
