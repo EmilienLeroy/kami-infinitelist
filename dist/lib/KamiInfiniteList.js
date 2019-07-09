@@ -13,10 +13,6 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-//polyfill
-require("@webcomponents/webcomponentsjs/custom-elements-es5-adapter");
-require("@webcomponents/webcomponentsjs/webcomponents-bundle");
-require("web-animations-js");
 var kami_component_1 = require("kami-component");
 var KamiSearchBar_1 = require("./KamiSearchBar");
 var KamiInfiniteList = /** @class */ (function (_super) {

@@ -115,8 +115,6 @@ var KamiSearchBar = /** @class */ (function (_super) {
     };
     return KamiSearchBar;
 }(kami_component_1.default));
-//define the web component
-customElements.define(KamiSearchBar.tag, KamiSearchBar);
 //export the component
 exports.default = KamiSearchBar;
 //# sourceMappingURL=KamiSearchBar.js.map

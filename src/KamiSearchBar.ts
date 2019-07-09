@@ -159,8 +159,6 @@ class KamiSearchBar extends KamiComponent {
     }
 }
 
-//define the web component
-customElements.define(KamiSearchBar.tag, KamiSearchBar);
 
 //export the component
 export default KamiSearchBar;
