@@ -1,6 +1,9 @@
 import KamiComponent from 'kami-component';
 import KamiSearchBar from './KamiSearchBar';
 
+import IClickElementEvent from '../interfaces/IClickElementEvent';
+import Order from '../enum/order';
+
 class KamiInfiniteList extends KamiComponent {
     /**
      * @property {Array<Object>} - store all the component get form the datasource
@@ -40,9 +43,9 @@ class KamiInfiniteList extends KamiComponent {
     private data: any;
 
     /**
-     * @property {CustomEvent<{element: HTMLElement, index: number }>} clickElementEvent - event when an element of the list is clicked.
+     * @property {CustomEvent<IClickElementEvent>} clickElementEvent - event when an element of the list is clicked.
      */
-    private clickElementEvent: CustomEvent<{element: HTMLElement, index: number }>;
+    private clickElementEvent: CustomEvent<IClickElementEvent>;
 
     /**
      * @property {HTMLElement} clickElement - the last clicked element into the list
@@ -66,7 +69,6 @@ class KamiInfiniteList extends KamiComponent {
         this.clickElementEvent = this.updateClickElementEvent(this.index);
     }
 
-
     static get observedAttributes() {
         return [
             'datasource',
@@ -76,6 +78,8 @@ class KamiInfiniteList extends KamiComponent {
             'useSearch',
             'searchQuery',
             'sortQuery',
+            'orderQuery',
+            'sort',
             'page',
             'limit',
             'flex'
@@ -95,8 +99,10 @@ class KamiInfiniteList extends KamiComponent {
                 useSearch: this.toBoolean(this.getAttribute('useSearch')) || false,
                 searchQuery: this.getAttribute('searchQuery') || 'search',
                 sortQuery: this.getAttribute('sortQuery') || 'sort',
+                orderQuery: this.getAttribute('orderQuery') || 'order',
                 pageQuery: this.getAttribute('pageQuery') || 'page',
                 limitQuery: this.getAttribute('limitQuery') || 'limit',
+                sort: this.getAttribute('sort') || 'id',
                 page: this.getAttribute('page') || '1',
                 flex: this.toBoolean(this.getAttribute('flex')) || false,
                 query: {}
@@ -114,11 +120,12 @@ class KamiInfiniteList extends KamiComponent {
                 this.props.query[this.props.searchQuery] = this.getUrlParam(this.props.searchQuery);
             }
 
-            this.props.query[this.props.sortQuery] = this.getUrlParam(this.props.sortQuery);
+            this.props.query[this.props.sortQuery] = this.props.sort;
+            this.props.query[this.props.orderQuery] = this.getUrlParam(this.props.orderQuery);
         }
     }
 
-    public initEventListener(): void { }
+    public initEventListener(): void {}
 
     public connectedCallback(): void {
         //init dom.
@@ -159,12 +166,13 @@ class KamiInfiniteList extends KamiComponent {
             this.wrapper
                 .querySelector(KamiSearchBar.tag)!
                 .addEventListener('sort', (event: any) => {
-                    console.log(event.detail);
                     //update the query
-                    this.props.query[this.props.sortQuery] = event.detail.isAscending;
+                    this.props.query[this.props.orderQuery] = event.detail.order;
+                    this.props.query[this.props.sortQuery] = event.detail.sort;
 
                     //update the data
-                    this.updateData(this.props.sortQuery, event.detail.isAscending);
+                    this.updateData(this.props.orderQuery, event.detail.order);
+                    this.updateData(this.props.sortQuery, event.detail.sort);
                 });
 
             //event listener for the search event
@@ -260,10 +268,15 @@ class KamiInfiniteList extends KamiComponent {
                             component.setAttribute('index', this.index);
 
                             //update the component index
-                            this.index ++;
+                            this.index++;
 
                             //dispatch a new event with the clicked component
-                            component.addEventListener('click',()=>{ this.clickedEvent(component, parseInt(component.getAttribute('index'))); });
+                            component.addEventListener('click', () => {
+                                this.clickedEvent(
+                                    component,
+                                    parseInt(component.getAttribute('index'))
+                                );
+                            });
 
                             this.addComponent(component);
                         } else {
@@ -326,37 +339,35 @@ class KamiInfiniteList extends KamiComponent {
 
     /**
      * Dispatch the custom event clickElement with the component clicked
-     * and the index into the list. 
+     * and the index into the list.
      * @param component {HTMLElement} - the component clicked
      * @param index {number} - the component index
      * @returns {KamiInfiniteList} this
      */
-    public clickedEvent(component : HTMLElement, index: number) : this
-    {
+    public clickedEvent(component: HTMLElement, index: number): this {
         //update click element
         this.clickElement = component;
-        
+
         //reset the data send
         this.clickElementEvent = this.updateClickElementEvent(index);
-        
+
         //send the event
         this.dispatchEvent(this.clickElementEvent);
-        
+
         return this;
     }
 
     /**
      * Create a new custom event with the new click element value
      * @param index {number} - index position of the element click
-     * @returns {CustomEvent<{element: HTMLElement, index: number }>} the custom event
+     * @returns {CustomEvent<IClickElementEvent>} the custom event
      */
-    public updateClickElementEvent(index: number)
-    {
+    public updateClickElementEvent(index: number): CustomEvent<IClickElementEvent> {
         return new CustomEvent('clickElement', {
             detail: {
                 element: this.clickElement!,
                 index: index
-            }
+            } as IClickElementEvent
         });
     }
 
@@ -396,8 +407,9 @@ class KamiInfiniteList extends KamiComponent {
     public renderSearch(): string {
         return `
             <${KamiSearchBar.tag}
-                searchprops="${this.getUrlParam(this.props.searchQuery) || ''}"
-                ascendingprops="${this.getUrlParam(this.props.sortQuery) || false}"
+                search="${this.getUrlParam(this.props.searchQuery) || ''}"
+                sort=${this.props.sort || ''}
+                order="${this.getUrlParam(this.props.orderQuery) || Order.ASC}"
             >
             </${KamiSearchBar.tag}>
         `;

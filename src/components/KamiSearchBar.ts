@@ -1,17 +1,23 @@
 import KamiComponent from 'kami-component';
+import ISearchEvent from '../interfaces/ISearchEvent';
+import ISortEvent from '../interfaces/ISortEvent';
+import Order from '../enum/order';
 
 class KamiSearchBar extends KamiComponent {
-    sortEvent: any;
-    searchEvent: any;
-    sort: any;
-    search: any;
+    private sortEvent: CustomEvent<ISortEvent>;
+    private searchEvent: CustomEvent<ISearchEvent>;
+    private sort: any;
+    private search: any;
 
     constructor() {
         super();
+
+        this.sortEvent = this.updateSortEvent();
+        this.searchEvent = this.updateSearchEvent();
     }
 
     static get observedAttributes() {
-        return ['searchprops', 'ascendingprops'];
+        return ['search', 'sort', 'order'];
     }
 
     static get tag(): string {
@@ -19,11 +25,13 @@ class KamiSearchBar extends KamiComponent {
     }
 
     setProperties() {
+        let order: any = this.getAttribute('order');
         //init the observed props
         this.props = this.observe({
             sortIcone: 'arrow_drop_down',
-            isAscending: this.toBoolean(this.getAttribute('ascendingProps')),
-            search: this.getAttribute('searchProps')
+            order: Order[order] || Order.ASC,
+            sort: this.getAttribute('sort') || 'id',
+            search: this.getAttribute('search') || 'name'
         });
     }
 
@@ -34,18 +42,10 @@ class KamiSearchBar extends KamiComponent {
 
     initEventListener() {
         //create the sort event
-        this.sortEvent = new CustomEvent('sort', {
-            detail: {
-                isAscending: this.props.isAscending
-            }
-        });
+        this.sortEvent = this.updateSortEvent();
 
         //create the search event
-        this.searchEvent = new CustomEvent('search', {
-            detail: {
-                search: this.props.search
-            }
-        });
+        this.searchEvent = this.updateSearchEvent();
 
         //add sort event listener
         this.sort = this.wrapper.querySelector('#sort');
@@ -68,12 +68,29 @@ class KamiSearchBar extends KamiComponent {
         });
     }
 
+    public updateSortEvent(): CustomEvent<ISortEvent> {
+        return new CustomEvent('sort', {
+            detail: {
+                order: this.props.order,
+                sort: this.props.sort
+            } as ISortEvent
+        });
+    }
+
+    public updateSearchEvent(): CustomEvent<ISearchEvent> {
+        return new CustomEvent('search', {
+            detail: {
+                search: this.props.search
+            } as ISearchEvent
+        });
+    }
+
     /**
      * Init the sort arrow
      * @returns {SearchBar} this
      */
     initSort() {
-        this.props.isAscending
+        this.props.order == Order.ASC
             ? (this.props.sortIcone = 'arrow-drop-down')
             : (this.props.sortIcone = 'arrow-drop-up');
 
@@ -86,13 +103,13 @@ class KamiSearchBar extends KamiComponent {
      */
     toggleSort() {
         //if is already ascending
-        if (this.props.isAscending) {
+        if (this.props.order == Order.ASC) {
             //set the sort into descending
-            this.props.isAscending = false;
+            this.props.order = Order.DESC;
             this.props.sortIcone = 'arrow-drop-up';
         } else {
             //set the sort into ascending
-            this.props.isAscending = true;
+            this.props.order = Order.ASC;
             this.props.sortIcone = 'arrow-drop-down';
         }
 
@@ -158,7 +175,6 @@ class KamiSearchBar extends KamiComponent {
         `;
     }
 }
-
 
 //export the component
 export default KamiSearchBar;

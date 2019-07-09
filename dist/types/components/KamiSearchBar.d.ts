@@ -1,15 +1,19 @@
 import KamiComponent from 'kami-component';
+import ISearchEvent from '../interfaces/ISearchEvent';
+import ISortEvent from '../interfaces/ISortEvent';
 declare class KamiSearchBar extends KamiComponent {
-    sortEvent: any;
-    searchEvent: any;
-    sort: any;
-    search: any;
+    private sortEvent;
+    private searchEvent;
+    private sort;
+    private search;
     constructor();
     static readonly observedAttributes: string[];
     static readonly tag: string;
     setProperties(): void;
     connectedCallback(): void;
     initEventListener(): void;
+    updateSortEvent(): CustomEvent<ISortEvent>;
+    updateSearchEvent(): CustomEvent<ISearchEvent>;
     /**
      * Init the sort arrow
      * @returns {SearchBar} this

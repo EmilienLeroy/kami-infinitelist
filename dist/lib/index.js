@@ -5,8 +5,8 @@ require("@webcomponents/webcomponentsjs/custom-elements-es5-adapter");
 require("@webcomponents/webcomponentsjs/webcomponents-bundle");
 require("web-animations-js");
 //import lib
-var KamiSearchBar_1 = require("./KamiSearchBar");
-var KamiInfiniteList_1 = require("./KamiInfiniteList");
+var KamiSearchBar_1 = require("./components/KamiSearchBar");
+var KamiInfiniteList_1 = require("./components/KamiInfiniteList");
 //define the iron-icon component if is not already define
 if (!customElements.get('iron-icon')) {
     Promise.resolve().then(function () { return require('@polymer/iron-icons'); });

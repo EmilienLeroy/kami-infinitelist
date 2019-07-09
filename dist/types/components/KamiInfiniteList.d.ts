@@ -1,4 +1,5 @@
 import KamiComponent from 'kami-component';
+import IClickElementEvent from '../interfaces/IClickElementEvent';
 declare class KamiInfiniteList extends KamiComponent {
     /**
      * @property {Array<Object>} - store all the component get form the datasource
@@ -31,7 +32,7 @@ declare class KamiInfiniteList extends KamiComponent {
      */
     private data;
     /**
-     * @property {CustomEvent<{element: HTMLElement, index: number }>} clickElementEvent - event when an element of the list is clicked.
+     * @property {CustomEvent<IClickElementEvent>} clickElementEvent - event when an element of the list is clicked.
      */
     private clickElementEvent;
     /**
@@ -82,12 +83,9 @@ declare class KamiInfiniteList extends KamiComponent {
     /**
      * Create a new custom event with the new click element value
      * @param index {number} - index position of the element click
-     * @returns {CustomEvent<{element: HTMLElement, index: number }>} the custom event
+     * @returns {CustomEvent<IClickElementEvent>} the custom event
      */
-    updateClickElementEvent(index: number): CustomEvent<{
-        element: HTMLElement;
-        index: number;
-    }>;
+    updateClickElementEvent(index: number): CustomEvent<IClickElementEvent>;
     /**
      * Convert your data
      * @param {Object} obj - Object to convert
