@@ -6,6 +6,7 @@ An infinite scroller. Just add a datasource provider and a delegate web componen
 
 * [Simple](https://emilienleroy.fr/assets/infinite/simple/)
 * [Flex](https://emilienleroy.fr/assets/infinite/flex/)
+* [Search](https://emilienleroy.fr/assets/search/)
 
 <p align="center">
   <img  src="https://emilienleroy.fr/assets/flex.gif">
