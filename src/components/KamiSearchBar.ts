@@ -156,7 +156,7 @@ class KamiSearchBar extends KamiComponent {
                         this.props.search ? 'searchbar__input--insearch' : ''
                     }" 
                     type="text" 
-                    placeholder="Rechercher"
+                    placeholder="Search"
                 >
                 <div id="sort" class="searchbar__sort">
                     <iron-icon icon="${this.props.sortIcone}"></iron-icon>    
@@ -167,28 +167,31 @@ class KamiSearchBar extends KamiComponent {
 
     renderStyle() {
         return `
+
+            iron-icon{
+                color: #8080809e;
+            }
+
             .searchbar{
                 padding: 10px;
                 display: flex;
                 margin: 0px 0px 7px 0px;
                 justify-content: space-between;
-                border-radius: 10px;
+                border-radius: 5px;
                 box-shadow: 0 1px 4px 0 rgba(0,0,0,.14);
                 align-items: center;
             }
   
-
             .searchbar__input{
                 flex-grow: 1;
-                border-radius: 5px;
-                margin: 0 5px;
+                border-radius: 2px;
+                margin: 0 10px;
                 border: none;
                 padding: 10px;
             }
             
-
             .searchbar__input--insearch{
-                background-color: #80808029;
+                background-color: #80808014;
             }
 
             .searchbar__sort{
