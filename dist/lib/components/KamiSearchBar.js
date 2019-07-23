@@ -37,6 +37,26 @@ var KamiSearchBar = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(KamiSearchBar.prototype, "sort", {
+        /**
+         * @returns {HTMLElement} the sort dom
+         */
+        get: function () {
+            return this.wrapper.querySelector('#sort');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(KamiSearchBar.prototype, "search", {
+        /**
+         * @returns {HTMLInputElement} the search dom
+         */
+        get: function () {
+            return this.wrapper.querySelector('#search');
+        },
+        enumerable: true,
+        configurable: true
+    });
     KamiSearchBar.prototype.setProperties = function () {
         var order = this.getAttribute('order');
         //init the observed props
@@ -58,13 +78,11 @@ var KamiSearchBar = /** @class */ (function (_super) {
         //create the search event
         this.searchEvent = this.updateSearchEvent();
         //add sort event listener
-        this.sort = this.wrapper.querySelector('#sort');
         this.sort.addEventListener('click', function (event) {
             event.preventDefault();
             _this.toggleSort();
         });
         //add search evenet listener
-        this.search = this.wrapper.querySelector('#search');
         this.search.addEventListener('keypress', function (event) {
             if (event.keyCode == 13) {
                 //reload the search props with the input value
@@ -75,6 +93,10 @@ var KamiSearchBar = /** @class */ (function (_super) {
             }
         });
     };
+    /**
+     * Update data and create a new sort event with this.
+     * @returns {CustomEvent<ISortEvent>} a sort event
+     */
     KamiSearchBar.prototype.updateSortEvent = function () {
         return new CustomEvent('sort', {
             detail: {
@@ -83,6 +105,10 @@ var KamiSearchBar = /** @class */ (function (_super) {
             }
         });
     };
+    /**
+     * Update data and create a new search event with this.
+     * @returns {CustomEvent<ISearchEvent>} a search event
+     */
     KamiSearchBar.prototype.updateSearchEvent = function () {
         return new CustomEvent('search', {
             detail: {

@@ -1,6 +1,8 @@
 import KamiComponent from 'kami-component';
 import IClickElementEvent from '../interfaces/IClickElementEvent';
 declare class KamiInfiniteList extends KamiComponent {
+    static readonly observedAttributes: string[];
+    static readonly tag: any;
     /**
      * @property {Array<Object>} - store all the component get form the datasource
      */
@@ -44,9 +46,7 @@ declare class KamiInfiniteList extends KamiComponent {
      */
     private index;
     constructor();
-    static readonly observedAttributes: string[];
     setProperties(): void;
-    initEventListener(): void;
     connectedCallback(): void;
     /**
      * Generate a request with the current datasource and query.

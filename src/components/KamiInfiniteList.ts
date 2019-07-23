@@ -5,6 +5,27 @@ import IClickElementEvent from '../interfaces/IClickElementEvent';
 import Order from '../enum/order';
 
 class KamiInfiniteList extends KamiComponent {
+    static get observedAttributes() {
+        return [
+            'datasource',
+            'delegate',
+            'width',
+            'height',
+            'useSearch',
+            'searchQuery',
+            'sortQuery',
+            'orderQuery',
+            'sort',
+            'page',
+            'limit',
+            'flex'
+        ];
+    }
+
+    static get tag(): any {
+        return 'kami-infinitelist';
+    }
+
     /**
      * @property {Array<Object>} - store all the component get form the datasource
      */
@@ -69,23 +90,6 @@ class KamiInfiniteList extends KamiComponent {
         this.clickElementEvent = this.updateClickElementEvent(this.index);
     }
 
-    static get observedAttributes() {
-        return [
-            'datasource',
-            'delegate',
-            'width',
-            'height',
-            'useSearch',
-            'searchQuery',
-            'sortQuery',
-            'orderQuery',
-            'sort',
-            'page',
-            'limit',
-            'flex'
-        ];
-    }
-
     public setProperties(): void {
         let datasource: string | null = this.getAttribute('datasource');
         let delegate: string | null = this.getAttribute('delegate');
@@ -124,8 +128,6 @@ class KamiInfiniteList extends KamiComponent {
             this.props.query[this.props.orderQuery] = this.getUrlParam(this.props.orderQuery);
         }
     }
-
-    public initEventListener(): void {}
 
     public connectedCallback(): void {
         //init dom.

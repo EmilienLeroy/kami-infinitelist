@@ -678,6 +678,16 @@
           _this.initEventListener();
           return _this;
       }
+      Object.defineProperty(KamiComponent, "tag", {
+          get: function () { throw new Error("Your component should have a tag !"); },
+          enumerable: true,
+          configurable: true
+      });
+      /**
+       * Overide this method to add your event listener.
+       * This method will be call if you use the observe() method.
+       */
+      KamiComponent.prototype.initEventListener = function () { };
       /**
        * This methode update your attribute set in the props object.
        * @param {String} name - the attribute name
@@ -820,6 +830,26 @@
           enumerable: true,
           configurable: true
       });
+      Object.defineProperty(KamiSearchBar.prototype, "sort", {
+          /**
+           * @returns {HTMLElement} the sort dom
+           */
+          get: function () {
+              return this.wrapper.querySelector('#sort');
+          },
+          enumerable: true,
+          configurable: true
+      });
+      Object.defineProperty(KamiSearchBar.prototype, "search", {
+          /**
+           * @returns {HTMLInputElement} the search dom
+           */
+          get: function () {
+              return this.wrapper.querySelector('#search');
+          },
+          enumerable: true,
+          configurable: true
+      });
       KamiSearchBar.prototype.setProperties = function () {
           var order = this.getAttribute('order');
           //init the observed props
@@ -841,13 +871,11 @@
           //create the search event
           this.searchEvent = this.updateSearchEvent();
           //add sort event listener
-          this.sort = this.wrapper.querySelector('#sort');
           this.sort.addEventListener('click', function (event) {
               event.preventDefault();
               _this.toggleSort();
           });
           //add search evenet listener
-          this.search = this.wrapper.querySelector('#search');
           this.search.addEventListener('keypress', function (event) {
               if (event.keyCode == 13) {
                   //reload the search props with the input value
@@ -858,6 +886,10 @@
               }
           });
       };
+      /**
+       * Update data and create a new sort event with this.
+       * @returns {CustomEvent<ISortEvent>} a sort event
+       */
       KamiSearchBar.prototype.updateSortEvent = function () {
           return new CustomEvent('sort', {
               detail: {
@@ -866,6 +898,10 @@
               }
           });
       };
+      /**
+       * Update data and create a new search event with this.
+       * @returns {CustomEvent<ISearchEvent>} a search event
+       */
       KamiSearchBar.prototype.updateSearchEvent = function () {
           return new CustomEvent('search', {
               detail: {
@@ -945,6 +981,13 @@
           enumerable: true,
           configurable: true
       });
+      Object.defineProperty(KamiInfiniteList, "tag", {
+          get: function () {
+              return 'kami-infinitelist';
+          },
+          enumerable: true,
+          configurable: true
+      });
       KamiInfiniteList.prototype.setProperties = function () {
           var datasource = this.getAttribute('datasource');
           var delegate = this.getAttribute('delegate');
@@ -980,7 +1023,6 @@
               this.props.query[this.props.orderQuery] = this.getUrlParam(this.props.orderQuery);
           }
       };
-      KamiInfiniteList.prototype.initEventListener = function () { };
       KamiInfiniteList.prototype.connectedCallback = function () {
           var _this = this;
           //init dom.
@@ -1096,7 +1138,9 @@
                           //update the component index
                           _this.index++;
                           //dispatch a new event with the clicked component
-                          component_1.addEventListener('click', function () { _this.clickedEvent(component_1, parseInt(component_1.getAttribute('index'))); });
+                          component_1.addEventListener('click', function () {
+                              _this.clickedEvent(component_1, parseInt(component_1.getAttribute('index')));
+                          });
                           _this.addComponent(component_1);
                       }
                       else {

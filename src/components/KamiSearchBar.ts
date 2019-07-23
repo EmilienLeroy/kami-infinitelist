@@ -4,24 +4,44 @@ import ISortEvent from '../interfaces/ISortEvent';
 import Order from '../enum/order';
 
 class KamiSearchBar extends KamiComponent {
-    private sortEvent: CustomEvent<ISortEvent>;
-    private searchEvent: CustomEvent<ISearchEvent>;
-    private sort: any;
-    private search: any;
-
-    constructor() {
-        super();
-
-        this.sortEvent = this.updateSortEvent();
-        this.searchEvent = this.updateSearchEvent();
-    }
-
     static get observedAttributes() {
         return ['search', 'sort', 'order'];
     }
 
-    static get tag(): string {
+    static get tag(): any {
         return 'kami-searchbar';
+    }
+
+    /**
+     * @returns {HTMLElement} the sort dom
+     */
+    private get sort(): HTMLElement {
+        return this.wrapper.querySelector('#sort') as HTMLElement;
+    }
+
+    /**
+     * @returns {HTMLInputElement} the search dom
+     */
+    private get search(): HTMLInputElement {
+        return this.wrapper.querySelector('#search') as HTMLInputElement;
+    }
+
+    /**
+     * This is emit when the sort btn is clicked.
+     * @property {CustomEvent<ISortEvent>} sortEvent - sort event
+     */
+    private sortEvent: CustomEvent<ISortEvent>;
+
+    /**
+     * This is emit when the key enter is press and the search bar is focus.
+     * @property {CustomEvent<ISearchEvent>} searchEvent - seach event
+     */
+    private searchEvent: CustomEvent<ISearchEvent>;
+
+    constructor() {
+        super();
+        this.sortEvent = this.updateSortEvent();
+        this.searchEvent = this.updateSearchEvent();
     }
 
     setProperties() {
@@ -48,14 +68,12 @@ class KamiSearchBar extends KamiComponent {
         this.searchEvent = this.updateSearchEvent();
 
         //add sort event listener
-        this.sort = this.wrapper.querySelector('#sort');
         this.sort.addEventListener('click', (event: Event) => {
             event.preventDefault();
             this.toggleSort();
         });
 
         //add search evenet listener
-        this.search = this.wrapper.querySelector('#search');
         this.search.addEventListener('keypress', (event: KeyboardEvent) => {
             if (event.keyCode == 13) {
                 //reload the search props with the input value
@@ -68,6 +86,10 @@ class KamiSearchBar extends KamiComponent {
         });
     }
 
+    /**
+     * Update data and create a new sort event with this.
+     * @returns {CustomEvent<ISortEvent>} a sort event
+     */
     public updateSortEvent(): CustomEvent<ISortEvent> {
         return new CustomEvent('sort', {
             detail: {
@@ -77,6 +99,10 @@ class KamiSearchBar extends KamiComponent {
         });
     }
 
+    /**
+     * Update data and create a new search event with this.
+     * @returns {CustomEvent<ISearchEvent>} a search event
+     */
     public updateSearchEvent(): CustomEvent<ISearchEvent> {
         return new CustomEvent('search', {
             detail: {

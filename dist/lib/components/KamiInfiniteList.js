@@ -49,6 +49,13 @@ var KamiInfiniteList = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(KamiInfiniteList, "tag", {
+        get: function () {
+            return 'kami-infinitelist';
+        },
+        enumerable: true,
+        configurable: true
+    });
     KamiInfiniteList.prototype.setProperties = function () {
         var datasource = this.getAttribute('datasource');
         var delegate = this.getAttribute('delegate');
@@ -84,7 +91,6 @@ var KamiInfiniteList = /** @class */ (function (_super) {
             this.props.query[this.props.orderQuery] = this.getUrlParam(this.props.orderQuery);
         }
     };
-    KamiInfiniteList.prototype.initEventListener = function () { };
     KamiInfiniteList.prototype.connectedCallback = function () {
         var _this = this;
         //init dom.
@@ -200,7 +206,9 @@ var KamiInfiniteList = /** @class */ (function (_super) {
                         //update the component index
                         _this.index++;
                         //dispatch a new event with the clicked component
-                        component_1.addEventListener('click', function () { _this.clickedEvent(component_1, parseInt(component_1.getAttribute('index'))); });
+                        component_1.addEventListener('click', function () {
+                            _this.clickedEvent(component_1, parseInt(component_1.getAttribute('index')));
+                        });
                         _this.addComponent(component_1);
                     }
                     else {
