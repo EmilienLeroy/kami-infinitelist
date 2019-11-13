@@ -39,7 +39,7 @@ Or grab from the *dist* folder :
 </script>
 ```
 
-Or:
+*Or with webpack / rollup*
 
 ```js
 // ES6 Modules or TypeScript
@@ -100,8 +100,11 @@ For use the infinite list you need two prerequire.
     </post-custom>
 </kami-infinitelist>
 
+<!-- import iron icon if necessary -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/@polymer/iron-icons@3.0.1/iron-icons.min.js"></script>
+
 <!-- infinite list lib -->
-<script src="../../dist/KamiInfiniteList.umd.js"></script>
+<script src="./KamiInfiniteList.umd.js"></script>
 
 <!-- base component lib -->
 <script src="./KamiComponent.umd.js"></script>
@@ -231,6 +234,38 @@ class Post extends KamiComponent
 }
 
 ```
+## Icons 
+
+Kami-infinitlist use [iron-icons](https://github.com/PolymerElements/iron-icons) for display icons.
+If you want use this icone you need to import it manually. 
+
+```
+npm install --save @polymer/iron-icons
+```
+
+```html
+<!-- import iron icon if necessary -->
+<script type="module">
+    import './node_modules/@polymer/iron-icon/iron-icon.js';
+    import './node_modules/@polymer/iron-icons/iron-icons.js';
+</script>
+
+<!-- import before import kami infinite list -->
+<script src="./KamiInfiniteList.umd.js"></script>
+```
+
+*Or with webpack / rollup*
+
+```js
+import '@polymer/iron-icon/iron-icon.js';
+import '@polymer/iron-icons/iron-icons.js';
+
+// import before init kami infinite list
+import KamiInfiniteList from 'kami-infinitelist'
+```
+
+> See also search example into the example folder.
+
 ## Props
 
 | name          |  type    | description                                | required| default value                   |

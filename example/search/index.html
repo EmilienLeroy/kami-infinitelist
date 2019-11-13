@@ -41,8 +41,12 @@
         </post-custom>
     </kami-infinitelist>
 
-
-    <script src="../../dist/KamiInfiniteList.umd.js"></script>
+    <!-- import iron icon if necessary -->
+    <script type="module">
+        import './node_modules/@polymer/iron-icon/iron-icon.js';
+        import './node_modules/@polymer/iron-icons/iron-icons.js';
+    </script>
+    <script src="./KamiInfiniteList.umd.js"></script>
     <script src="./KamiComponent.umd.js"></script>
     <script src="./Post.js"></script>
     <script>
