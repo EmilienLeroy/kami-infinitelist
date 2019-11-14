@@ -8,8 +8,16 @@ class Post extends KamiComponent
     static get observedAttributes() {
         return [
             'titleprops', 
-            'bodyprops',
+            'labelsprops',
         ];
+    }
+
+    get labels(){
+        try {
+            return JSON.parse(this.props.labelsprops);
+        } catch (error) {
+            return [];
+        }
     }
 
     //set your properties to the parent
@@ -18,7 +26,7 @@ class Post extends KamiComponent
     {
         this.props = this.observe({
             titleprops: this.getAttribute('titleprops'),
-            bodyprops: this.getAttribute('bodyprops')
+            labelsprops: this.getAttribute('labelsprops')
         })
     }
 
@@ -61,7 +69,12 @@ class Post extends KamiComponent
         return `
             <div class="post">
                 <div class="post__title">${this.props.titleprops}</div>
-                <div class="post__body">${this.props.bodyprops}</div>
+                <div class="post__body">${this.labels.map((label, i) => `
+                <div style="background-color: #${label.color} ;">
+                  ${label.name}
+                </div>
+              `.trim()).join('')}
+            </div>
             </div>
         `;        
     }
