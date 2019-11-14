@@ -45,42 +45,41 @@ class KamiSearchBar extends KamiComponent {
     }
 
     setProperties() {
-        let order: any = this.getAttribute('order');
-        //init the observed props
+        // init the observed props
         this.props = this.observe({
             sortIcone: 'arrow_drop_down',
-            order: Order[order] || Order.ASC,
+            order: this.getAttribute('order') as Order,
             sort: this.getAttribute('sort') || 'id',
             search: this.getAttribute('search') || 'name'
         });
     }
 
     connectedCallback() {
-        //init the sort state
+        // init the sort state
         this.initSort();
     }
 
     initEventListener() {
-        //create the sort event
+        // create the sort event
         this.sortEvent = this.updateSortEvent();
 
-        //create the search event
+        // create the search event
         this.searchEvent = this.updateSearchEvent();
 
-        //add sort event listener
+        // add sort event listener
         this.sort.addEventListener('click', (event: Event) => {
             event.preventDefault();
             this.toggleSort();
         });
 
-        //add search evenet listener
+        // add search evenet listener
         this.search.addEventListener('keypress', (event: KeyboardEvent) => {
-            if (event.keyCode == 13) {
-                //reload the search props with the input value
-                //this is necessary for the template reloard
+            if (event.key === 'Enter') {
+                // reload the search props with the input value
+                // this is necessary for the template reloard
                 this.props.search = this.search.value;
 
-                //send the search event
+                // send the search event
                 this.dispatchEvent(this.searchEvent);
             }
         });
@@ -116,7 +115,7 @@ class KamiSearchBar extends KamiComponent {
      * @returns {SearchBar} this
      */
     initSort() {
-        this.props.order == Order.ASC
+        this.props.order === Order.ASC
             ? (this.props.sortIcone = 'arrow-drop-down')
             : (this.props.sortIcone = 'arrow-drop-up');
 
@@ -128,18 +127,18 @@ class KamiSearchBar extends KamiComponent {
      * @returns {SearchBar} this
      */
     toggleSort() {
-        //if is already ascending
-        if (this.props.order == Order.ASC) {
-            //set the sort into descending
+        // if is already ascending
+        if (this.props.order === Order.ASC) {
+            // set the sort into descending
             this.props.order = Order.DESC;
             this.props.sortIcone = 'arrow-drop-up';
         } else {
-            //set the sort into ascending
+            // set the sort into ascending
             this.props.order = Order.ASC;
             this.props.sortIcone = 'arrow-drop-down';
         }
 
-        //send the sort event
+        // send the sort event
         this.dispatchEvent(this.sortEvent);
 
         return this;
@@ -205,5 +204,5 @@ class KamiSearchBar extends KamiComponent {
     }
 }
 
-//export the component
+// export the component
 export default KamiSearchBar;
