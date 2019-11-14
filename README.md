@@ -83,7 +83,9 @@ For use the infinite list you need two prerequire.
 
  ### Delegate
 
- The delegate should be a web component. The property of this component will be map to the data by the infinte list component. This component should be into the main slot of the list. For more information see the [Data Binding](#data-binding) section.
+ The delegate should be a web component. The property of this component will be map to the data by the infinte list component. 
+ 
+ >This component should be into the main slot of the list. For more information see the [Data Binding](#data-binding) section.
 
  ### Simple list
 
@@ -249,7 +251,7 @@ class Post extends KamiComponent
 ```
 ## Data Binding
 
-To bind data to the infinite list you to have a [delegate](#delegate) component. Schema of the data should be write into the delegate props.
+To bind data to the infinite list you should create a [delegate](#delegate) component. Schema of the data should be write into the delegate props.
 
 For example we have this data : 
 
