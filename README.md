@@ -2,6 +2,19 @@
 
 An infinite scroller. Just add a datasource provider and a delegate web components and it's work !
 
+* [Demo](#demo)
+* [Installation](#installation)
+* [Usage](#usage)
+* [Example](#example)
+    * [Datasource](#datasource)
+    * [Delegate](#delegate)
+    * [Simple List](#simple-list)
+* [Data Binding](#data-binding)
+* [Icons](#icons)
+* [Props](#props)
+* [Events](#events)
+
+
 ## Demo
 
 * [Simple](https://emilienleroy.fr/assets/infinite/simple/)
@@ -50,7 +63,7 @@ window.customElements.define('kami-infinitelist', KamiInfiniteList);
 ```
 
 
-## Examples
+## Example
 
 
 For use the infinite list you need two prerequire.
@@ -63,14 +76,16 @@ For use the infinite list you need two prerequire.
  For exemple see the [jsonplaceholder](http://jsonplaceholder.typicode.com/posts?_start=10&_limit=10) api work as well.
  Into the request, the component will add a query with some paramters :
 
- * page: the number of the current page
- * limit: the number of item by page
+ * **page :** the number of the current page
+ * **limit :** the number of item by page
 
- You can update the param name with the properties *pageQuery* and *limiQuery*. For more information see the [Props](#Props) section.
+ > You can update the param name with the properties *pageQuery* and *limiQuery*. For more information see the [Props](#Props) section.
 
  ### Delegate
 
- The delegate should be a web component. The property of this component will be map to the data by the infinte list component.
+ The delegate should be a web component. The property of this component will be map to the data by the infinte list component. 
+ 
+ >This component should be into the main slot of the list. For more information see the [Data Binding](#data-binding) section.
 
  ### Simple list
 
@@ -234,6 +249,65 @@ class Post extends KamiComponent
 }
 
 ```
+## Data Binding
+
+To bind data to the infinite list you should create a [delegate](#delegate) component. Schema of the data should be write into the delegate props.
+
+For example we have this data : 
+
+```json
+[
+    {
+        "username": "test",
+        "fullname": {
+            "firstname": "test",
+            "lastname": "test"
+        },
+        "posts": [
+            {
+                "title": "post1",
+                "content":"content1"
+            },
+            {
+                "title": "post2",
+                "content":"content2"
+            },
+        ]
+    }
+]
+```
+
+To bind this you can create a user component :
+
+```html
+<!-- infinite list component -->
+<kami-infinitelist
+    delegate="user-element"
+    otherProps...
+>
+    <!-- delegate component -->
+    <user-element
+        username="username"
+        firstname="fullname.firstname"
+        lastname="fullname.lastname"
+        posts="posts"
+    >
+    </user-element>
+</kami-infinitelist>
+```
+
+To bind **array** the component will stringify your data. You should to **parse manually** into your delegate like this :
+
+```js
+// try catch are necessary if your delegate component extends KamiComponent.
+try {
+    return JSON.parse(this.getAttribute('posts'));
+} catch (error) {
+    return [];
+}
+```
+> See also the **issues** example for more details.
+
 ## Icons 
 
 Kami-infinitlist use [iron-icons](https://github.com/PolymerElements/iron-icons) for display icons.
@@ -264,7 +338,7 @@ import '@polymer/iron-icons/iron-icons.js';
 import KamiInfiniteList from 'kami-infinitelist'
 ```
 
-> See also search example into the example folder.
+> See also **search** example into the example folder.
 
 ## Props
 

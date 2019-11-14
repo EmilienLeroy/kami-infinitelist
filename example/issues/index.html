@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+
+    *{
+        padding: 0;
+        margin: 0;
+    }
+
+    body{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
+
+</style>
+<body>
+    
+    <kami-infinitelist
+        datasource="https://api.github.com/repos/Kamiapp-fr/kami-infinitelist/issues?state=all"
+        delegate="post-custom"
+        limitQuery="per_page"
+        pageQuery="page"
+        limit='7'
+        width="700px"
+        height="300px"
+    >
+        <post-custom
+            titleprops="title"
+            labelsprops="labels"
+        >
+        </post-custom>
+    </kami-infinitelist>
+
+
+    <script src="../../dist/KamiInfiniteList.umd.js"></script>
+    <script src="./KamiComponent.umd.js"></script>
+    <script src="./Post.js"></script>
+    <script>
+        window.onload = function(){
+            customElements.define('post-custom',Post);
+            customElements.define('kami-infinitelist', KamiInfiniteList);
+            document.querySelector('kami-infinitelist').addEventListener('clickElement',(e)=>{
+                console.log(e.detail)
+            })
+        }
+    </script>
+</body>
+</html>

@@ -305,7 +305,11 @@ var KamiInfiniteList = /** @class */ (function (_super) {
         if (obj === void 0) { obj = self; }
         if (separator === void 0) { separator = '.'; }
         var properties = Array.isArray(path) ? path : path.split(separator);
-        return properties.reduce(function (prev, curr) { return prev && prev[curr]; }, obj);
+        var data = properties.reduce(function (prev, curr) { return prev && prev[curr]; }, obj);
+        if (Array.isArray(data)) {
+            data = JSON.stringify(data);
+        }
+        return data;
     };
     /**
      * Add a new component into the main container

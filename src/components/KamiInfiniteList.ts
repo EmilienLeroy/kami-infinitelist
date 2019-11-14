@@ -381,7 +381,11 @@ class KamiInfiniteList extends KamiComponent {
      */
     public convertData(obj = self, path: any, separator = '.'): any {
         let properties = Array.isArray(path) ? path : path.split(separator);
-        return properties.reduce((prev: any, curr: any) => prev && prev[curr], obj);
+        let data = properties.reduce((prev: any, curr: any) => prev && prev[curr], obj); 
+        if(Array.isArray(data)){
+            data = JSON.stringify(data);
+        }
+        return data;
     }
 
     /**
