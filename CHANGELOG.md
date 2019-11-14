@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.5] - 2019-11-14
+
+### Changed
+
+- Remove dynamic import of polymer icons. See [issues/4](https://github.com/Kamiapp-fr/kami-infinitelist/issues/4)
+
+### Fixed
+
+- Fix pagination for custom page param. See [issues/5](https://github.com/Kamiapp-fr/kami-infinitelist/issues/5) 
+- Fix data binding for array of object. See [issues/6](https://github.com/Kamiapp-fr/kami-infinitelist/issues/6)
+
 ## [0.0.4] - 2019-07-23
 ### Added
 - search bar with query.
