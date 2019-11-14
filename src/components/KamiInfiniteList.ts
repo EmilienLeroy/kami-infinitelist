@@ -107,7 +107,7 @@ class KamiInfiniteList extends KamiComponent {
                 pageQuery: this.getAttribute('pageQuery') || 'page',
                 limitQuery: this.getAttribute('limitQuery') || 'limit',
                 sort: this.getAttribute('sort') || 'id',
-                page: this.getAttribute('page') || '1',
+                page: parseInt(this.getAttribute('page') as string, 10) || 1,
                 flex: this.toBoolean(this.getAttribute('flex')) || false,
                 query: {}
             });
@@ -115,7 +115,7 @@ class KamiInfiniteList extends KamiComponent {
             throw new Error('You need a datasource and delegate !');
         }
 
-        this.props.query[this.props.pageQuery] = this.getAttribute('page') || '1';
+        this.props.query[this.props.pageQuery] = this.props.page ;
         this.props.query[this.props.limitQuery] = this.getAttribute('limit') || '10';
 
         if (this.props.useSearch) {
@@ -150,7 +150,7 @@ class KamiInfiniteList extends KamiComponent {
             ) {
                 if (!this.inLoad && !this.end) {
                     // increment the page
-                    this.props.query.page++;
+                    this.props.query[this.props.pageQuery] ++;
 
                     // set the state inLoad at true
                     this.inLoad = true;

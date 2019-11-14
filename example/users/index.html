@@ -27,10 +27,11 @@
         datasource="https://jsonplaceholder.typicode.com/users/"
         delegate="post-custom"
         limitQuery="_limit"
-        pageQuery="_start"
-        limit='7'
+        pageQuery="_page"
+        limit='20'
+        page="0"
         width="700px"
-        height="300px"
+        height="100vh"
     >
         <post-custom
             titleprops="username"

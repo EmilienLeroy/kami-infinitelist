@@ -997,7 +997,7 @@ var KamiInfiniteList = /** @class */ (function (_super) {
                 pageQuery: this.getAttribute('pageQuery') || 'page',
                 limitQuery: this.getAttribute('limitQuery') || 'limit',
                 sort: this.getAttribute('sort') || 'id',
-                page: this.getAttribute('page') || '1',
+                page: parseInt(this.getAttribute('page'), 10) || 1,
                 flex: this.toBoolean(this.getAttribute('flex')) || false,
                 query: {}
             });
@@ -1005,7 +1005,7 @@ var KamiInfiniteList = /** @class */ (function (_super) {
         else {
             throw new Error('You need a datasource and delegate !');
         }
-        this.props.query[this.props.pageQuery] = this.getAttribute('page') || '1';
+        this.props.query[this.props.pageQuery] = this.props.page;
         this.props.query[this.props.limitQuery] = this.getAttribute('limit') || '10';
         if (this.props.useSearch) {
             // update the query with url query
@@ -1032,7 +1032,7 @@ var KamiInfiniteList = /** @class */ (function (_super) {
                 _this.container.scrollHeight - _this.container.offsetHeight) {
                 if (!_this.inLoad && !_this.end) {
                     // increment the page
-                    _this.props.query.page++;
+                    _this.props.query[_this.props.pageQuery]++;
                     // set the state inLoad at true
                     _this.inLoad = true;
                     // get the new data
