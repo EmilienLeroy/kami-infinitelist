@@ -107,7 +107,7 @@ class KamiInfiniteList extends KamiComponent {
                 pageQuery: this.getAttribute('pageQuery') || 'page',
                 limitQuery: this.getAttribute('limitQuery') || 'limit',
                 sort: this.getAttribute('sort') || 'id',
-                page: this.getAttribute('page') || '1',
+                page: parseInt(this.getAttribute('page') as string, 10) || 1,
                 flex: this.toBoolean(this.getAttribute('flex')) || false,
                 query: {}
             });
@@ -115,11 +115,11 @@ class KamiInfiniteList extends KamiComponent {
             throw new Error('You need a datasource and delegate !');
         }
 
-        this.props.query[this.props.pageQuery] = this.getAttribute('page') || '1';
+        this.props.query[this.props.pageQuery] = this.props.page ;
         this.props.query[this.props.limitQuery] = this.getAttribute('limit') || '10';
 
         if (this.props.useSearch) {
-            //update the query with url query
+            // update the query with url query
             if (this.getUrlParam(this.props.searchQuery)) {
                 this.props.query[this.props.searchQuery] = this.getUrlParam(this.props.searchQuery);
             }
@@ -130,61 +130,61 @@ class KamiInfiniteList extends KamiComponent {
     }
 
     public connectedCallback(): void {
-        //init dom.
+        // init dom.
         this.container = this.wrapper.querySelector('.infinitelist');
 
-        //clone the delegate element from the root element.
+        // clone the delegate element from the root element.
         this.component = this.querySelector(this.props.delegate).cloneNode();
 
-        //get all attribute from the delegate element.
+        // get all attribute from the delegate element.
         this.componentAttributes = this.getAttributes(this.component);
 
-        //get the data from the data source
+        // get the data from the data source
         this.getData();
 
-        //init scroll listener
+        // init scroll listener
         this.container.addEventListener('scroll', () => {
             if (
                 Math.round(this.container.scrollTop + 20) >
                 this.container.scrollHeight - this.container.offsetHeight
             ) {
                 if (!this.inLoad && !this.end) {
-                    //increment the page
-                    this.props.query.page++;
+                    // increment the page
+                    this.props.query[this.props.pageQuery] ++;
 
-                    //set the state inLoad at true
+                    // set the state inLoad at true
                     this.inLoad = true;
 
-                    //get the new data
+                    // get the new data
                     this.getData();
                 }
             }
         });
 
-        //add event listener on the searchbar
-        //only if the useSearch property is set at true
+        // add event listener on the searchbar
+        // only if the useSearch property is set at true
         if (this.props.useSearch) {
-            //event listener for the sort event
+            // event listener for the sort event
             this.wrapper
                 .querySelector(KamiSearchBar.tag)!
                 .addEventListener('sort', (event: any) => {
-                    //update the query
+                    // update the query
                     this.props.query[this.props.orderQuery] = event.detail.order;
                     this.props.query[this.props.sortQuery] = event.detail.sort;
 
-                    //update the data
+                    // update the data
                     this.updateData(this.props.orderQuery, event.detail.order);
                     this.updateData(this.props.sortQuery, event.detail.sort);
                 });
 
-            //event listener for the search event
+            // event listener for the search event
             this.wrapper
                 .querySelector(KamiSearchBar.tag)!
                 .addEventListener('search', (event: any) => {
-                    //update the query
+                    // update the query
                     this.props.query[this.props.searchQuery] = event.detail.search;
 
-                    //update the data
+                    // update the data
                     this.updateData(this.props.searchQuery, event.detail.search);
                 });
         }
@@ -196,7 +196,7 @@ class KamiInfiniteList extends KamiComponent {
      */
     public generateRequest(): Request {
         try {
-            //generate an url this the datasource
+            // generate an url this the datasource
             let url: URL;
             try {
                 url = new URL(this.props.datasource);
@@ -204,16 +204,16 @@ class KamiInfiniteList extends KamiComponent {
                 url = new URL(`${window.location.origin}${this.props.datasource}`);
             }
 
-            //add query params
+            // add query params
             for (let key in this.props.query) {
                 url.searchParams.append(key, this.props.query[key]);
             }
 
-            //generate the request
+            // generate the request
             let requestInfo: RequestInfo = url.toString();
             let request = new Request(requestInfo);
 
-            //return the request
+            // return the request
             return request;
         } catch (error) {
             throw new Error('Invalid datasource !');
@@ -228,24 +228,24 @@ class KamiInfiniteList extends KamiComponent {
     public getData(): this {
         let request: Request = this.generateRequest();
 
-        //set the inLoad state a true
+        // set the inLoad state a true
         this.inLoad = true;
 
-        //get the data from the endpoint
+        // get the data from the endpoint
         fetch(request)
             .then(response => response.json())
             .then(json => {
-                //check if data are array else throw an error
+                // check if data are array else throw an error
                 if (Array.isArray(json)) {
-                    //if the data length are not the same as the limit property
-                    //the end state is set at true and stop the get data methode
-                    if (json.length != this.props.query[this.props.limitQuery]) {
+                    // if the data length are not the same as the limit property
+                    // the end state is set at true and stop the get data methode
+                    if (json.length !== parseInt(this.props.query[this.props.limitQuery],10)) {
                         this.end = true;
                     }
 
-                    //for each data it will convert and create a component
-                    //all component are set into the components property
-                    //and the create dom are append to the main dom
+                    // for each data it will convert and create a component
+                    // all component are set into the components property
+                    // and the create dom are append to the main dom
                     for (this.data in json) {
                         let data = json[this.data];
 
@@ -258,25 +258,25 @@ class KamiInfiniteList extends KamiComponent {
                                     component.getAttribute(atts.toString())
                                 );
 
-                                atts != 'slots'
+                                atts !== 'slots'
                                     ? component.setAttribute(atts, dataProvide)
                                     : (component.innerHTML = dataProvide);
                             });
 
-                            //store the component
+                            // store the component
                             this.components.push(component);
 
-                            //store the component index
+                            // store the component index
                             component.setAttribute('index', this.index);
 
-                            //update the component index
+                            // update the component index
                             this.index++;
 
-                            //dispatch a new event with the clicked component
+                            // dispatch a new event with the clicked component
                             component.addEventListener('click', () => {
                                 this.clickedEvent(
                                     component,
-                                    parseInt(component.getAttribute('index'))
+                                    parseInt(component.getAttribute('index'),10)
                                 );
                             });
 
@@ -289,11 +289,11 @@ class KamiInfiniteList extends KamiComponent {
                     throw new Error('Data should be an array of object !');
                 }
 
-                //at the end the inload state is set as false
+                // at the end the inload state is set as false
                 this.inLoad = false;
             })
             .catch(error => {
-                //error handling
+                // error handling
                 console.log(error.message);
             });
 
@@ -309,11 +309,11 @@ class KamiInfiniteList extends KamiComponent {
      */
     public updateData(param: string, value: string): this {
         this
-            //update the url browser
+            // update the url browser
             .setUrlParam(param, value)
-            //reset the list
+            // reset the list
             .resetList()
-            //add the new data with the new query
+            // add the new data with the new query
             .getData();
 
         return this;
@@ -324,16 +324,16 @@ class KamiInfiniteList extends KamiComponent {
      * @returns {KamiInfiniteList} this
      */
     public resetList(): this {
-        //remove all component store
+        // remove all component store
         this.components = [];
 
-        //remove all component from the ui
+        // remove all component from the ui
         this.container.innerHTML = '';
 
-        //reset the page number
+        // reset the page number
         this.props.query.page = this.props.page;
 
-        //reset the end property
+        // reset the end property
         this.end = false;
 
         return this;
@@ -347,13 +347,13 @@ class KamiInfiniteList extends KamiComponent {
      * @returns {KamiInfiniteList} this
      */
     public clickedEvent(component: HTMLElement, index: number): this {
-        //update click element
+        // update click element
         this.clickElement = component;
 
-        //reset the data send
+        // reset the data send
         this.clickElementEvent = this.updateClickElementEvent(index);
 
-        //send the event
+        // send the event
         this.dispatchEvent(this.clickElementEvent);
 
         return this;
@@ -399,7 +399,11 @@ class KamiInfiniteList extends KamiComponent {
      * @returns {Array.<String>} - all attribute in a array
      */
     public getAttributes(el: any): any[] {
-        for (var i = 0, atts = el.attributes, n = atts.length, arr = []; i < n; i++) {
+        let atts = el.attributes;
+        let n = atts.length;
+        let arr = []
+
+        for (let i = 0; i < n; i++) {
             arr.push(atts[i].nodeName);
         }
 

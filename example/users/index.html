@@ -17,42 +17,40 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        height: 100vh;
     }
 
 </style>
 <body>
     
     <kami-infinitelist
-        datasource="https://jsonplaceholder.typicode.com/posts/"
+        datasource="https://jsonplaceholder.typicode.com/users/"
         delegate="post-custom"
         limitQuery="_limit"
         pageQuery="_page"
-        searchQuery="title_like"
-        sortQuery="_sort"
-        orderQuery="_order"
-        limit='22'
+        limit='20'
+        page="0"
         width="700px"
-        useSearch="true"
+        height="100vh"
     >
         <post-custom
-            titleprops="title"
-            bodyprops="body"
+            titleprops="username"
+            bodyprops="email"
         >
         </post-custom>
     </kami-infinitelist>
 
-    <!-- import iron icon if necessary -->
-    <script type="module">
-        import './node_modules/@polymer/iron-icon/iron-icon.js';
-        import './node_modules/@polymer/iron-icons/iron-icons.js';
-    </script>
-    <script src="./KamiInfiniteList.umd.js"></script>
+
+    <script src="../../dist/KamiInfiniteList.umd.js"></script>
     <script src="./KamiComponent.umd.js"></script>
     <script src="./Post.js"></script>
     <script>
         window.onload = function(){
             customElements.define('post-custom',Post);
             customElements.define('kami-infinitelist', KamiInfiniteList);
+            document.querySelector('kami-infinitelist').addEventListener('clickElement',(e)=>{
+                console.log(e.detail)
+            })
         }
     </script>
 </body>

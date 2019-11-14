@@ -58,37 +58,36 @@ var KamiSearchBar = /** @class */ (function (_super) {
         configurable: true
     });
     KamiSearchBar.prototype.setProperties = function () {
-        var order = this.getAttribute('order');
-        //init the observed props
+        // init the observed props
         this.props = this.observe({
             sortIcone: 'arrow_drop_down',
-            order: order_1.default[order] || order_1.default.ASC,
+            order: this.getAttribute('order'),
             sort: this.getAttribute('sort') || 'id',
             search: this.getAttribute('search') || 'name'
         });
     };
     KamiSearchBar.prototype.connectedCallback = function () {
-        //init the sort state
+        // init the sort state
         this.initSort();
     };
     KamiSearchBar.prototype.initEventListener = function () {
         var _this = this;
-        //create the sort event
+        // create the sort event
         this.sortEvent = this.updateSortEvent();
-        //create the search event
+        // create the search event
         this.searchEvent = this.updateSearchEvent();
-        //add sort event listener
+        // add sort event listener
         this.sort.addEventListener('click', function (event) {
             event.preventDefault();
             _this.toggleSort();
         });
-        //add search evenet listener
+        // add search evenet listener
         this.search.addEventListener('keypress', function (event) {
-            if (event.keyCode == 13) {
-                //reload the search props with the input value
-                //this is necessary for the template reloard
+            if (event.key === 'Enter') {
+                // reload the search props with the input value
+                // this is necessary for the template reloard
                 _this.props.search = _this.search.value;
-                //send the search event
+                // send the search event
                 _this.dispatchEvent(_this.searchEvent);
             }
         });
@@ -121,7 +120,7 @@ var KamiSearchBar = /** @class */ (function (_super) {
      * @returns {SearchBar} this
      */
     KamiSearchBar.prototype.initSort = function () {
-        this.props.order == order_1.default.ASC
+        this.props.order === order_1.default.ASC
             ? (this.props.sortIcone = 'arrow-drop-down')
             : (this.props.sortIcone = 'arrow-drop-up');
         return this;
@@ -131,18 +130,18 @@ var KamiSearchBar = /** @class */ (function (_super) {
      * @returns {SearchBar} this
      */
     KamiSearchBar.prototype.toggleSort = function () {
-        //if is already ascending
-        if (this.props.order == order_1.default.ASC) {
-            //set the sort into descending
+        // if is already ascending
+        if (this.props.order === order_1.default.ASC) {
+            // set the sort into descending
             this.props.order = order_1.default.DESC;
             this.props.sortIcone = 'arrow-drop-up';
         }
         else {
-            //set the sort into ascending
+            // set the sort into ascending
             this.props.order = order_1.default.ASC;
             this.props.sortIcone = 'arrow-drop-down';
         }
-        //send the sort event
+        // send the sort event
         this.dispatchEvent(this.sortEvent);
         return this;
     };
@@ -154,6 +153,6 @@ var KamiSearchBar = /** @class */ (function (_super) {
     };
     return KamiSearchBar;
 }(kami_component_1.default));
-//export the component
+// export the component
 exports.default = KamiSearchBar;
 //# sourceMappingURL=KamiSearchBar.js.map
