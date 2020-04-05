@@ -18,7 +18,8 @@ class KamiInfiniteList extends KamiComponent {
             'sort',
             'page',
             'limit',
-            'flex'
+            'flex',
+            'nested'
         ];
     }
 
@@ -109,13 +110,14 @@ class KamiInfiniteList extends KamiComponent {
                 sort: this.getAttribute('sort') || 'id',
                 page: parseInt(this.getAttribute('page') as string, 10) || 1,
                 flex: this.toBoolean(this.getAttribute('flex')) || false,
+                nested: this.getAttribute('nested'),
                 query: {}
             });
         } else {
             throw new Error('You need a datasource and delegate !');
         }
 
-        this.props.query[this.props.pageQuery] = this.props.page ;
+        this.props.query[this.props.pageQuery] = this.props.page;
         this.props.query[this.props.limitQuery] = this.getAttribute('limit') || '10';
 
         if (this.props.useSearch) {
@@ -150,7 +152,7 @@ class KamiInfiniteList extends KamiComponent {
             ) {
                 if (!this.inLoad && !this.end) {
                     // increment the page
-                    this.props.query[this.props.pageQuery] ++;
+                    this.props.query[this.props.pageQuery]++;
 
                     // set the state inLoad at true
                     this.inLoad = true;
@@ -235,11 +237,15 @@ class KamiInfiniteList extends KamiComponent {
         fetch(request)
             .then(response => response.json())
             .then(json => {
+                if (json && this.props.nested) {
+                    json = json[this.props.nested];
+                }
+
                 // check if data are array else throw an error
                 if (Array.isArray(json)) {
                     // if the data length are not the same as the limit property
                     // the end state is set at true and stop the get data methode
-                    if (json.length !== parseInt(this.props.query[this.props.limitQuery],10)) {
+                    if (json.length !== parseInt(this.props.query[this.props.limitQuery], 10)) {
                         this.end = true;
                     }
 
@@ -276,7 +282,7 @@ class KamiInfiniteList extends KamiComponent {
                             component.addEventListener('click', () => {
                                 this.clickedEvent(
                                     component,
-                                    parseInt(component.getAttribute('index'),10)
+                                    parseInt(component.getAttribute('index'), 10)
                                 );
                             });
 
@@ -381,8 +387,8 @@ class KamiInfiniteList extends KamiComponent {
      */
     public convertData(obj = self, path: any, separator = '.'): any {
         let properties = Array.isArray(path) ? path : path.split(separator);
-        let data = properties.reduce((prev: any, curr: any) => prev && prev[curr], obj); 
-        if(Array.isArray(data)){
+        let data = properties.reduce((prev: any, curr: any) => prev && prev[curr], obj);
+        if (Array.isArray(data)) {
             data = JSON.stringify(data);
         }
         return data;
@@ -405,7 +411,7 @@ class KamiInfiniteList extends KamiComponent {
     public getAttributes(el: any): any[] {
         let atts = el.attributes;
         let n = atts.length;
-        let arr = []
+        let arr = [];
 
         for (let i = 0; i < n; i++) {
             arr.push(atts[i].nodeName);
