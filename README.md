@@ -251,6 +251,8 @@ class Post extends KamiComponent
 ```
 ## Data Binding
 
+### Simple data
+
 To bind data to the infinite list you should create a [delegate](#delegate) component. Schema of the data should be write into the delegate props.
 
 For example we have this data : 
@@ -296,6 +298,8 @@ To bind this you can create a user component :
 </kami-infinitelist>
 ```
 
+### Data with array
+
 To bind **array** the component will stringify your data. You should to **parse manually** into your delegate like this :
 
 ```js
@@ -307,6 +311,50 @@ try {
 }
 ```
 > See also the **issues** example for more details.
+
+### Nested
+
+If your request response with an object and your data to bind are into a nested field. You can use the `nested` prop to bind this field and not the root object.
+
+```json
+{
+    info: {
+        status: 200
+    },
+    // nested field
+    results: [
+        {
+            "username": "test",
+            "fullname": {
+                "firstname": "test",
+                "lastname": "test"
+            },
+            "posts": [
+                {
+                    "title": "post1",
+                    "content":"content1"
+                },
+                {
+                    "title": "post2",
+                    "content":"content2"
+                },
+            ]
+        }
+    ]
+}
+
+```
+```html
+<!-- infinite list component -->
+<kami-infinitelist
+    nested="results"
+    otherProps...
+>
+    <!-- delegate component -->
+</kami-infinitelist>
+```
+
+> See also the **nested** example for more details.
 
 ## Icons 
 
@@ -356,6 +404,7 @@ import KamiInfiniteList from 'kami-infinitelist'
 | page          | Number   | Number of the current page                 | false   | 1                               |
 | limit         | Number   | Number of item display                     | false   | 10                              |
 | flex          | Boolean  | Use the flex property                      | false   | false                           |
+| nested        | string   | Parse an array into a nested field see the [data binding](#data-binding) section | false   | null               |
 
 
 ## Events
