@@ -32,11 +32,11 @@ An infinite scroller. Just add a datasource provider and a delegate web componen
 npm install --save kami-infinitelist
 ```
 
-Or grab from the *dist* folder :
+Or use the CDN :
 
 
 ```html
-<script src="KamiInfiniteList.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/kami-infinitelist"></script>
 ```
 
 
@@ -44,7 +44,7 @@ Or grab from the *dist* folder :
 
 
 ```html
-<script src="../dist/KamiInfiniteList.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/kami-infinitelist"></script>
 <script>
     window.onload = function(){
         customElements.define('kami-infinitelist', KamiInfiniteList);
