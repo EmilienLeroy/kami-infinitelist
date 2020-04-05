@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <kami-infinitelist
+        datasource="https://rickandmortyapi.com/api/character/"
+        delegate="card-component"
+        limitQuery="count"
+        pageQuery="page"
+        limit='20'
+        width="700px"
+        height="50vh"
+        nested="results"
+        style="perspective:  500px;"
+    >
+        <card-component 
+            name="name"
+            img="image"
+        ></card-component>
+    </kami-infinitelist>
+    <script src="https://cdn.jsdelivr.net/npm/kami-component"></script>
+    <script src="../../dist/KamiInfiniteList.umd.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
