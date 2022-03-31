@@ -1,3 +1,5 @@
+> **Deprecated:** This component is deprecated and will not receive any updates. Please use [kami-collection](https://github.com/Kamiapp-fr/kami-collection) instead.
+
 # `<kami-infinitelist>`
 
 An infinite scroller. Just add a datasource provider and a delegate web components and it's work !
